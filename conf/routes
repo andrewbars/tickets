@@ -12,3 +12,4 @@ GET     /assets/*file               controllers.Assets.at(path="/public", file)
 GET		/events						controllers.Events.list
 
 GET		/events/add					controllers.Events.add
+POST	/events/add					controllers.Events.save
