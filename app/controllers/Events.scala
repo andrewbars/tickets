@@ -15,7 +15,10 @@ object Events extends Controller {
 	def show(id:Long)=Action{
 	  implicit request=>
 	    val e=Event.getById(id)
-	    NotImplemented
+	    e match{
+	      case None=>NotFound
+	      case Some(x)=>Ok(views.html.events.details(x))
+	    }
 	}
 	def add=Action{
 	  implicit request =>
