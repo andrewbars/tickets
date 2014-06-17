@@ -12,3 +12,5 @@ GET     /assets/*file               controllers.Assets.at(path="/public", file)
 GET		/events						controllers.Events.list
 
 GET		/events/add					controllers.Events.add
+
+GET		/events/:id					controllers.Events.show(id:Long)
