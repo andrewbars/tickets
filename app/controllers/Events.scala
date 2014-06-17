@@ -12,14 +12,21 @@ object Events extends Controller {
 	  implicit request=>
 	    val events=Event.getAll
 	    //TODO добавить ссылку на темплейт со списком
-	    NotImplemented
+	    Ok(views.html.events.list(events))
+	}
+	def show(id:Long)=Action{
+	  implicit request=>
+	    val e=Event.getById(id)
+	    e match{
+	      case None=>NotFound
+	      case Some(x)=>Ok(views.html.events.details(x))
+	    }
 	}
 	def add=Action{
 	  implicit request =>
 	  //TODO заменить на ссылку на форму продукта
 	  Redirect(routes.Events.list())
 	}
-	
 	val eventMap=mapping(
 		"id"->longNumber,
 	    "tp"->text,

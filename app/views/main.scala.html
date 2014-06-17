@@ -5,11 +5,35 @@
 <html>
     <head>
         <title>@title</title>
-        <link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/main.css")">
+        <link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/bootstrap.css")">
         <link rel="shortcut icon" type="image/png" href="@routes.Assets.at("images/favicon.png")">
-        <script src="@routes.Assets.at("javascripts/jquery-1.9.0.min.js")" type="text/javascript"></script>
     </head>
     <body>
-        @content
+      <nav class ="navbar navbar-inverse" role="navigation">
+      	<div class="container">
+	      	<div class="navbar-header">
+	      		<a class="navbar-brand" href=@routes.Application.index()>
+	        		DevTrick
+	        	</a>
+	        </div>
+	        <div class="collapse navbar-collapse">
+	        	<ul class="nav navbar-nav">
+	        		<li class="dropdown">
+	        		<a href="#" class="dropdown-toggle" data-toggle="dropdown">События<b class="caret"></b></a>
+	        			<ul class="dropdown-menu">
+	        				<li><a href="@routes.Events.list">Список</a></li>
+	        				<li><a href="@routes.Events.add">Добавить</a></li>
+	        			</ul>
+	        		</li>
+	        		
+	        	</ul>
+	      	</div>
+      	</div>
+      </nav>  
+      <div class=container>
+    	  @content
+      </div>
+       <script src="@routes.Assets.at("javascripts/jquery-1.9.0.min.js")"></script>
+      <script src="@routes.Assets.at("javascripts/bootstrap.js")"></script>
     </body>
 </html>
