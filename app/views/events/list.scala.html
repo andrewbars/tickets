@@ -1,0 +1,14 @@
+@* list Template File *@
+@(events:List[Event])
+
+@main("Events list"){
+	<div class="list-group">
+		@for(event<-events){
+			<h4 class="list-group-item-heading"><a href=@routes.Events.show(event.id:Long) class="list-group-item"> 
+				@(event.tp+" "+event.name+": " + event.date)</a></h4>
+    		<p class="list-group-item-text">@event.dscr</p>
+		}
+	</div>
+	
+}
+	

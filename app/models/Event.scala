@@ -21,6 +21,7 @@ object Event{
   def getAll = inTransaction(allQ.toList)
   def insert(event:Event)=inTransaction(eventsTable.insert(event))
   def update(event:Event)=inTransaction(eventsTable.update(event))
+  def save(event:Event)=inTransaction(eventsTable.insertOrUpdate(event))
   def removeById(id:Long)=inTransaction(eventsTable.deleteWhere(_.id===id))
   def getById(id:Long) = getAll.find(_.id==id)
 }

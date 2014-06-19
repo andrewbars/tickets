@@ -1,0 +1,11 @@
+@* insert Template File *@
+@(ev: Form[Event])
+
+@main("Создание события"){
+	@helper.form(action= routes.Events.insert){
+	@eventForm(ev)
+	<div class="form-actions">
+		<button type="submit">Create Product</button>
+	</div>
+	}
+}

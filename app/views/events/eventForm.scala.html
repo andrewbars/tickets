@@ -1,0 +1,7 @@
+@* eventForm Template File *@
+	@(eventForm: Form[Event])
+	@helper.inputText(eventForm("id"))
+	@helper.inputText(eventForm("tp"))
+	@helper.inputText(eventForm("name"))
+	@helper.inputDate(eventForm("date"))
+	@helper.textarea(eventForm("dscr"))	

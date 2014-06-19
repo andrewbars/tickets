@@ -1,0 +1,11 @@
+@* edit Template File *@
+@(ev: Form[Event])
+
+@main("Редактование события"){
+	@helper.form(action= routes.Events.update){
+	@eventForm(ev)
+	<div class="form-actions">
+		<button type="submit">Create Product</button>
+	</div>
+	}
+}
