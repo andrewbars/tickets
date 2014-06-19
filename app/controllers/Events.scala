@@ -21,9 +21,9 @@ object Events extends Controller {
         case Some(x) => Ok(views.html.events.details(x))
       }
   }
-  def add = Action {
+  def addNew = Action {
     implicit request =>
-      Redirect(routes.Events.list())
+     Ok(views.html.events.addNew(eventForm))
   }
   def remove(id: Long) = Action {
     implicit request =>
@@ -37,10 +37,20 @@ object Events extends Controller {
 		"date"->date,
 		"dscr"->text
 	)(Event.apply)(Event.unapply)
-	val eventForm=Form(eventMap)
-	def processForm=Action{implicit request=>
+	
+	val eventForm=Form{
+    mapping(
+    	"id"->longNumber,
+	    "tp"->text,
+		"name"->text,
+		"date"->date,
+		"dscr"->text
+	)(Event.apply)(Event.unapply)	
+  }
+	
+	def addNewForm=Action{implicit request=>
 		eventForm.bindFromRequest.fold(
-			hasErrors=(form=>Redirect(routes.Events.add())),
+			formWithErrors => Ok (views.html.events.addNew(formWithErrors)),
 			success={
 			  event=>models.Event.insert(event)
 			  Redirect(routes.Events.list())
