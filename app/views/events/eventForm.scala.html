@@ -16,5 +16,5 @@
 }
 
 	@helper.input(eventForm("dscr"), '_label -> "Описание", '_class ->"form-group")	{ (id, name, value, args) =>
-    <textarea class="form-control" placeholder="Введите описание" rows="5" >@value</textarea>
-}
+    <textarea id="@id" name="@name" class="form-control" placeholder="Введите описание" rows="5" >@value</textarea>
+    }
