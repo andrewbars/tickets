@@ -1,0 +1,20 @@
+@* bootstrapform Template File *@
+@(elements: views.html.helper.FieldElements)
+@import play.api.i18n._
+@import views.html.helper._
+
+<div class="@elements.args.get('_class).getOrElse("form-group") @if(elements.errors.nonEmpty){has-error has-feedback}">
+	<label for="@elements.id" class="control-label col-sm-1">
+		@elements.label(elements.lang)
+	</label>
+	<div class="col-sm-10">
+	@elements.input
+	</div>
+	<span class="help-block col-md-offset-10">
+		@if(elements.errors.nonEmpty){
+			@elements.errors(elements.lang).mkString(", ")
+		}else {
+			@elements.infos(elements.lang).mkString(", ")
+		}
+	</span>
+</div>
