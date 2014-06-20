@@ -1,11 +1,13 @@
 @* edit Template File *@
 @(ev: Form[Event])(implicit flash:Flash)
+@import views.helpers.bootstrap._
 
 @main("Редактование события"){
-	@helper.form(action= routes.Events.update){
+	@helper.form(action= routes.Events.update, 'role->"form", 'class->"form-horizontal",'_label->"ID"){
+	@helper.input(ev("id"), '_class ->"form-group"){ (id, name, value, args) =>
+    <input type="text" value="@value" name="@name" id="@id" @toHtmlArgs(args) class="form-control" placeholder="Введите ID события" disabled>
+}
 	@eventForm(ev)
-	<div class="form-actions">
-		<button type="submit">Create Product</button>
-	</div>
+		<button type="submit" class="bth btn-primary btn-lg">Сохранить</button>
 	}
 }

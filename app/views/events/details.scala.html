@@ -4,14 +4,14 @@
 @main(event.name){
 	<div class="container">
 		<ul class="nav nav-tabs">
-			<li><a class="btn btn-primary" href="@routes.Events.edit(event.id)">Редактировать</a></li>
-			<li><a class="btn btn-danger" href="@routes.Events.remove(event.id)">Удалить</a></li>	
+			<li><a href="@routes.Events.edit(event.id)" class="btn btn-default active" role="button">Редактировать</a></li>
+			<li><a class="btn btn-danger active" href="@routes.Events.remove(event.id)"role="button">Удалить</a></li>	
 		</ul>
 	</div>
 	<div class="jumbotron">
 		<h1>@(event.tp+" "+event.name)</h1>
 		<h2>@(event.date)</h2>
 		<p>@event.dscr</p>
-		<p><a class="btn btn-info btn-lg" role="button">Заказать билеты</a>
+		<p><a class="btn btn-primary btn-lg active" role="button">Заказать билеты</a>
 	</div>
 }
