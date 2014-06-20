@@ -11,13 +11,13 @@ GET     /assets/*file               controllers.Assets.at(path="/public", file)
 #List of events page
 GET		/events						controllers.Events.list
 
-GET		/events/add					controllers.Events.addNew
-POST	/events/insert				controllers.Events.insert
+GET		/events/add				controllers.Events.addNew
+POST	/events/add				controllers.Events.insert
 
 GET		/events/:id					controllers.Events.show(id:Long)
 GET 	/events/:id/remove			controllers.Events.remove(id:Long)
 GET 	/events/:id/edit			controllers.Events.edit(id: Long)
-POST	/events/update				controllers.Events.update
+POST	/events/edit				controllers.Events.update
 
 
 	

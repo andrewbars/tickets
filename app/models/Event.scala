@@ -12,7 +12,9 @@ case class Event(
   name: String,
   date: Date,
   dscr: String
-  ) extends KeyedEntity[Long]
+  ) extends KeyedEntity[Long] {
+    
+}
 
 object Event{
   import Database.eventsTable

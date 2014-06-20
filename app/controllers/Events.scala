@@ -1,7 +1,7 @@
 package controllers
 
 import play.api.mvc.Controller
-import play.api.mvc.Action
+import play.api.mvc.{Action, Flash}
 import models.Event
 import java.util.Date
 import play.api.data.Form
@@ -28,18 +28,11 @@ object Events extends Controller {
   def remove(id: Long) = Action {
     implicit request =>
       Event.removeById(id)
-      Redirect(routes.Events.list())
+      Redirect(routes.Events.list()).flashing("success"->"Событие успешно удалено!")
   }
-  val eventMap = mapping(
-    "id" -> longNumber,
-    "tp" -> text,
-    "name" -> text,
-    "date" -> date,
-    "dscr" -> text)(Event.apply)(Event.unapply)
-
   val eventForm = Form {
     mapping(
-      "id" -> longNumber,
+      "id"->longNumber,
       "tp" -> text,
       "name" -> text,
       "date" -> date,
@@ -48,11 +41,11 @@ object Events extends Controller {
 
   def insert = Action { implicit request =>
     eventForm.bindFromRequest.fold(
-      formWithErrors => Ok(views.html.events.edit(formWithErrors)),
+      formWithErrors => Ok(views.html.events.insert(formWithErrors)).flashing("error"->"Исправьте ошибки в форме"),
       success = {
         event =>
           models.Event.insert(event)
-          Redirect(routes.Events.list())
+          Redirect(routes.Events.list()).flashing("success"->"Событие добавлено!")
       })
   }
 
@@ -67,10 +60,10 @@ object Events extends Controller {
   def update = Action{
     implicit request=>
       eventForm.bindFromRequest.fold(
-    	formWithErrors=>Ok(views.html.events.edit(formWithErrors)),
+    	formWithErrors=>Ok(views.html.events.edit(formWithErrors)).flashing("error"->"Исправьте ошибки в форме"),
     	success={
     	  event=>models.Event.update(event)
-    	  Redirect(routes.Events.show(event.id))
+    	  Redirect(routes.Events.show(event.id)).flashing("success"->"Сохранено!")
     	}
       )     
   }

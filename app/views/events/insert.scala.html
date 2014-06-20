@@ -1,5 +1,5 @@
 @* insert Template File *@
-@(ev: Form[Event])
+@(ev: Form[Event])(implicit flash:Flash)
 
 @main("Создание события"){
 	@helper.form(action= routes.Events.insert){
