@@ -10,7 +10,7 @@
 	</div>
 	<div class="jumbotron">
 		<h1>@(event.tp+" "+event.name)</h1>
-		<h2>@(event.date)</h2>
+		<h2>@(Dates.dateTimeFormat.format(event.date))</h2>
 		<p>@event.dscr</p>
 		<p><a class="btn btn-primary btn-lg active" role="button">Заказать билеты</a>
 	</div>

@@ -1,6 +1,6 @@
 package models
 import org.squeryl.KeyedEntity
-import java.util.Date
+import java.sql.Timestamp
 import org.squeryl.PrimitiveTypeMode._
 import org.squeryl.Table
 import org.squeryl.Query
@@ -10,7 +10,7 @@ case class Event(
   id: Long,
   tp: String,
   name: String,
-  date: Date,
+  date: Timestamp,
   dscr: String
   ) extends KeyedEntity[Long] {
     

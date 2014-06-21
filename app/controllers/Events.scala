@@ -3,9 +3,12 @@ package controllers
 import play.api.mvc.Controller
 import play.api.mvc.{Action, Flash}
 import models.Event
-import java.util.Date
+import java.util.{Date}
+import java.sql.Timestamp
+import java.text.{SimpleDateFormat,ParsePosition}
 import play.api.data.Form
 import play.api.data.Forms._
+import Dates._
 
 object Events extends Controller {
   def list = Action {
@@ -30,12 +33,13 @@ object Events extends Controller {
       Event.removeById(id)
       Redirect(routes.Events.list()).flashing("success"->"Событие успешно удалено!")
   }
+  
   val eventForm = Form {
     mapping(
       "id"->longNumber,
       "tp" -> text,
       "name" -> text,
-      "date" -> date,
+      "date" -> dateTimeMapping,
       "dscr" -> text)(Event.apply)(Event.unapply)
   }
 
@@ -45,7 +49,7 @@ object Events extends Controller {
       success = {
         event =>
           models.Event.insert(event)
-          Redirect(routes.Events.list()).flashing("success"->"Событие добавлено!")
+          Redirect(routes.Events.list()).flashing("success"->("Событие добавлено!"))
       })
   }
 
