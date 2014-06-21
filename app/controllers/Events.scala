@@ -3,17 +3,23 @@ package controllers
 import play.api.mvc.Controller
 import play.api.mvc.{Action, Flash}
 import models.Event
-import java.util.{Date}
+import java.util.{Date, Calendar}
 import java.sql.Timestamp
 import java.text.{SimpleDateFormat,ParsePosition}
 import play.api.data.Form
 import play.api.data.Forms._
+import play.api.data.validation.Constraints._
 import Dates._
 
 object Events extends Controller {
-  def list = Action {
+  def isArchive(event:Event)= Calendar.getInstance().getTime().after(event.date)
+  
+  def list (archive:Boolean=false) = Action {
     implicit request =>
-      val events = Event.getAll
+      val events = if(archive)
+        Event.getAll.takeWhile(isArchive(_))
+        else
+          Event.getAll.dropWhile(isArchive(_))
       Ok(views.html.events.list(events))
   }
   def show(id: Long) = Action {
@@ -37,10 +43,10 @@ object Events extends Controller {
   val eventForm = Form {
     mapping(
       "id"->longNumber,
-      "tp" -> text,
-      "name" -> text,
-      "date" -> dateTimeMapping,
-      "dscr" -> text)(Event.apply)(Event.unapply)
+      "tp" -> nonEmptyText.verifying(maxLength(20)),
+      "name" -> nonEmptyText.verifying(maxLength(100)),
+      "date" -> dateTimeMapping.verifying("Дата должна быть больше текущей", Calendar.getInstance().getTime().before(_)),
+      "dscr" -> text.verifying(maxLength(500)))(Event.apply)(Event.unapply)
   }
 
   def insert = Action { implicit request =>

@@ -9,8 +9,8 @@ GET     /                           controllers.Application.index
 GET     /assets/*file               controllers.Assets.at(path="/public", file)
 
 #List of events page
-GET		/events						controllers.Events.list
-
+GET		/events/					controllers.Events.list(archive:Boolean?=false)
+#Добавление нового события
 GET		/events/add				controllers.Events.addNew
 POST	/events/add				controllers.Events.insert
 

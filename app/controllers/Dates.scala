@@ -15,9 +15,9 @@ object Dates {
   val timeFormat = new SimpleDateFormat("HH:mm")
 
   val dateTimeMapping = mapping(
-    "date" -> text.verifying(pattern("""\d\d\d\d-\d\d-\d\d""".r, "Дата", "Дата должна быть в формате ГГГГ-ММ-ДД")),
-    "time" -> text.verifying(pattern("""\d\d:\d\d""".r,
-      "Время",
+    "date" -> nonEmptyText.verifying(pattern("""\d\d\d\d-\d\d-\d\d""".r, "ГГГГ-ММ-ДД", "Дата должна быть в формате ГГГГ-ММ-ДД")),
+    "time" -> nonEmptyText.verifying(pattern("""\d\d:\d\d""".r,
+      "ЧЧ:ММ",
       "Время должно быть в формате ЧЧ:ММ")))((date, time) => {
       val dateTime = date + " " + time
       new Timestamp(dateTimeFormat.parse(dateTime, new ParsePosition(0)).getTime())

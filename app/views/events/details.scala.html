@@ -4,14 +4,16 @@
 @main(event.name){
 	<div class="container">
 		<ul class="nav nav-tabs">
-			<li><a href="@routes.Events.edit(event.id)" class="btn btn-default active" role="button">Редактировать</a></li>
-			<li><a class="btn btn-danger active" href="@routes.Events.remove(event.id)"role="button">Удалить</a></li>	
+			<li><a href="@routes.Events.edit(event.id)" class="btn btn-default active" role="button">@Messages("edit")</a></li>
+			<li><a class="btn btn-danger active" href="@routes.Events.remove(event.id)"role="button">@Messages("delete")</a></li>	
 		</ul>
 	</div>
 	<div class="jumbotron">
 		<h1>@(event.tp+" "+event.name)</h1>
 		<h2>@(Dates.dateTimeFormat.format(event.date))</h2>
 		<p>@event.dscr</p>
-		<p><a class="btn btn-primary btn-lg active" role="button">Заказать билеты</a>
+		@if(!controllers.Events.isArchive(event)){
+			<p><a class="btn btn-primary btn-lg active" role="button">@Messages("tickets.order")</a>
+		}
 	</div>
 }

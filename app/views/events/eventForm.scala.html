@@ -3,21 +3,21 @@
 	
 	@import views.helpers.bootstrap._
 	
-	@helper.input(eventForm("tp"), '_label -> "Тип", '_class ->"form-group"){ (id, name, value, args) =>
+	@helper.input(eventForm("tp"), '_label -> Messages("type"), '_class ->"form-group"){ (id, name, value, args) =>
     <input type="text" value="@value" name="@name" id="@id" @toHtmlArgs(args) class="form-control" placeholder="Введите тип события">
 }
 
-	@helper.input(eventForm("name"), '_label -> "Название", '_class ->"form-group") { (id, name, value, args) =>
+	@helper.input(eventForm("name"), '_label -> Messages("name"), '_class ->"form-group") { (id, name, value, args) =>
     <input type="text" value="@value"  name="@name" id="@id" @toHtmlArgs(args) class="form-control" placeholder="Введите название события">
 }
 
-	@helper.input(eventForm("date.date"), '_label -> "Дата", '_class ->"form-group"){ (id, name, value, args) =>
+	@helper.input(eventForm("date.date"), '_label -> Messages("date"), '_class ->"form-group"){ (id, name, value, args) =>
     <input type="date" value="@value"  name="@name" id="@id" @toHtmlArgs(args) class="form-control">
 }
-	@helper.input(eventForm("date.time"), '_label -> "Время", '_class ->"form-group"){ (id, name, value, args) =>
+	@helper.input(eventForm("date.time"), '_label -> Messages("time"), '_class ->"form-group"){ (id, name, value, args) =>
     <input type="time" value="@value"  name="@name" id="@id" @toHtmlArgs(args) class="form-control">
 }
 
-	@helper.input(eventForm("dscr"), '_label -> "Описание", '_class ->"form-group")	{ (id, name, value, args) =>
+	@helper.input(eventForm("dscr"), '_label -> Messages("dscr"), '_class ->"form-group")	{ (id, name, value, args) =>
     <textarea id="@id" name="@name" class="form-control" placeholder="Введите описание" rows="5" >@value</textarea>
     }

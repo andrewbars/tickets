@@ -10,11 +10,11 @@
 	<div class="col-sm-10">
 	@elements.input
 	</div>
-	<span class="help-block col-md-offset-10">
+</div>
+	<span class="help-block col-sm-15">
 		@if(elements.errors.nonEmpty){
 			@elements.errors(elements.lang).mkString(", ")
 		}else {
 			@elements.infos(elements.lang).mkString(", ")
 		}
 	</span>
-</div>

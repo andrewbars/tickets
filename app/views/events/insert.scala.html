@@ -5,7 +5,7 @@
 @main("Создание события"){
 	@helper.form(action= routes.Events.insert, 'role->"form", 'class->"form-horizontal",'_label->"ID"){
 	@helper.input(ev("id"), '_class ->"form-group"){ (id, name, value, args) =>
-    <input type="text" value="0" name="@name" id="@id" @toHtmlArgs(args) class="form-control" placeholder="Введите ID события" readonly>
+    <input type="text" value="0" name="@name" id="@id" @toHtmlArgs(args) class="form-control" readonly>
 }
 	@eventForm(ev)
 		<button type="submit" class="bth btn-primary btn-lg">Сохранить</button>
