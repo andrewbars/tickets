@@ -16,6 +16,7 @@ events.edit = Редактирование события
 events.active = Текущие события
 events.archive = Архив событий
 events.list.empty = Нет событий для отображения
+events.notfound = Событие с таким ID не найдено
 
 events.form.entertype = Введите тип события (не более 20 символов)
 events.form.entername = Введите имя события (не более 100 символов)

@@ -1,32 +1,33 @@
 package controllers
 
 import play.api.mvc.Controller
-import play.api.mvc.{Action, Flash}
+import play.api.mvc.{ Action, Flash }
 import models.Event
-import java.util.{Date, Calendar}
+import java.util.{ Date, Calendar }
 import java.sql.Timestamp
-import java.text.{SimpleDateFormat,ParsePosition}
+import java.text.{ SimpleDateFormat, ParsePosition }
 import play.api.data.Form
+import play.api.i18n._
 import play.api.data.Forms._
 import play.api.data.validation.Constraints._
 import Dates._
 
 object Events extends Controller {
-  def isArchive(event:Event)= Calendar.getInstance().getTime().after(event.date)
-  
-  def list (archive:Boolean=false) = Action {
+  def isArchive(event: Event) = Calendar.getInstance().getTime().after(event.date)
+
+  def list(archive: Boolean = false) = Action {
     implicit request =>
-      val events = if(archive)
+      val events = if (archive)
         Event.getAll.takeWhile(isArchive(_))
-        else
-          Event.getAll.dropWhile(isArchive(_))
+      else
+        Event.getAll.dropWhile(isArchive(_))
       Ok(views.html.events.list(events))
   }
   def show(id: Long) = Action {
     implicit request =>
       val e = Event.getById(id)
       e match {
-        case None => NotFound
+        case None => Redirect(routes.Events.list()).flashing("error" -> (Messages("events.notfound")))
         case Some(x) => Ok(views.html.events.details(x))
       }
   }
@@ -36,13 +37,18 @@ object Events extends Controller {
   }
   def remove(id: Long) = Action {
     implicit request =>
-      Event.removeById(id)
-      Redirect(routes.Events.list()).flashing("success"->"Событие успешно удалено!")
+      Event.getById(id) match {
+        case None => Redirect(routes.Events.list()).flashing("error" -> (Messages("events.notfound")))
+        case Some(x) => {
+          Event.removeById(id)
+          Redirect(routes.Events.list()).flashing("success" -> "Событие успешно удалено!")
+        }
+      }
   }
-  
+
   val eventForm = Form {
     mapping(
-      "id"->longNumber,
+      "id" -> longNumber,
       "tp" -> nonEmptyText.verifying(maxLength(20)),
       "name" -> nonEmptyText.verifying(maxLength(100)),
       "date" -> dateTimeMapping.verifying("Дата должна быть больше текущей", Calendar.getInstance().getTime().before(_)),
@@ -51,11 +57,11 @@ object Events extends Controller {
 
   def insert = Action { implicit request =>
     eventForm.bindFromRequest.fold(
-      formWithErrors => Ok(views.html.events.insert(formWithErrors)).flashing("error"->"Исправьте ошибки в форме"),
+      formWithErrors => Ok(views.html.events.insert(formWithErrors)).flashing("error" -> "Исправьте ошибки в форме"),
       success = {
         event =>
           models.Event.insert(event)
-          Redirect(routes.Events.list()).flashing("success"->("Событие добавлено!"))
+          Redirect(routes.Events.list()).flashing("success" -> ("Событие добавлено!"))
       })
   }
 
@@ -67,14 +73,21 @@ object Events extends Controller {
         case Some(x) => Ok(views.html.events.edit(eventForm.fill(x)))
       }
   }
-  def update = Action{
-    implicit request=>
+  def update = Action {
+    implicit request =>
       eventForm.bindFromRequest.fold(
-    	formWithErrors=>Ok(views.html.events.edit(formWithErrors)).flashing("error"->"Исправьте ошибки в форме"),
-    	success={
-    	  event=>models.Event.update(event)
-    	  Redirect(routes.Events.show(event.id)).flashing("success"->"Сохранено!")
-    	}
-      )     
+        formWithErrors => Ok(views.html.events.edit(formWithErrors)).flashing("error" -> "Исправьте ошибки в форме"),
+        success = {
+          event =>
+            {
+              Event.getById(event.id) match {
+                case None => Redirect(routes.Events.list()).flashing("error" -> (Messages("events.notfound")))
+                case Some(x) => {
+                  models.Event.update(event)
+                  Redirect(routes.Events.show(event.id)).flashing("success" -> "Сохранено!")
+                }
+              }
+            }
+        })
   }
 }
