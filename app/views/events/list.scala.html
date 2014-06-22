@@ -1,0 +1,18 @@
+@* list Template File *@
+@(events:List[Event])(implicit flash:Flash)
+
+@main("Events list"){
+	@if(events.isEmpty){
+		<div class="alert alert-info">@Messages("events.list.empty")</div>
+	}
+	
+	<div class="list-group">
+		@for(event<-events){
+			<h4 class="list-group-item-heading"><a href=@routes.Events.show(event.id:Long) class="list-group-item"> 
+				@(event.tp+" "+event.name+": " + Dates.dateTimeFormat.format(event.date))</a></h4>
+    		<p class="list-group-item-text">@event.dscr</p>
+		}
+	</div>
+	
+}
+	

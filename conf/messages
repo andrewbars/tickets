@@ -1,0 +1,25 @@
+app.dev = DevTrick
+
+events = События
+list = Список
+add = Добавить
+edit = Редактировать
+delete = Удалить
+save = Сохранить
+type = Тип
+name = Название
+date = Дата
+time = Время
+dscr = Описание
+
+events.edit = Редактирование события
+events.active = Текущие события
+events.archive = Архив событий
+events.list.empty = Нет событий для отображения
+events.notfound = Событие с таким ID не найдено
+
+events.form.entertype = Введите тип события (не более 20 символов)
+events.form.entername = Введите имя события (не более 100 символов)
+events.form.enterdscr = Введите имя события (не более 500 символов)
+
+tickets.order = Заказ билетов
