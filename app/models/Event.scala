@@ -15,6 +15,8 @@ case class Event(
   dscr: String) extends KeyedEntity[Long] {
   lazy val sectors: OneToMany[Sector] =
     Database.eventsToSectors.left(this)
+  lazy val sells: OneToMany[Sale] =
+    Database.eventsToSells.left(this)
 }
 
 object Event {
@@ -39,4 +41,8 @@ object Event {
   def save(event: Event) = inTransaction(eventsTable.insertOrUpdate(event))
   def removeById(id: Long) = inTransaction(eventsTable.deleteWhere(_.id === id))
   def getById(id: Long) = getAll.find(_.id == id)
+  def getSectors(id:Long):Option[List[Sector]] = getById(id) match{
+    case None=>None
+    case Some(event)=>inTransaction(Some(event.sectors.toList))
+  }
 }

@@ -15,6 +15,14 @@ sectorID BIGINT,
 rowNumber INT,
 num INT,
 sold BOOLEAN,
+saleID BIGINT,
+PRIMARY KEY (id)
+);
+
+CREATE TABLE sales(
+id BIGINT,
+eventID BIGINT,
+date DATETIME,
 PRIMARY KEY (id)
 );
 
@@ -22,3 +30,4 @@ PRIMARY KEY (id)
 
 DROP TABLE IF EXISTS sectors
 DROP TABLE IF EXISTS sits
+DROP TABLE IF EXISTS sells
