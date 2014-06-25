@@ -1,4 +1,31 @@
 @* prices Template File *@
-@(pricesForm: Form[Map[String,Int]])(implicit flash:Flash)
+@(pricesForm: Form[Map[String,Int]])(implicit flash:Flash, id:Long)
 
+@import views.helpers.bootstrap._
+
+@main(Messages("prices.set.name")){
+	@helper.form(action= routes.Seats.savePrices(id), 'role->"form", 'class->"form-horizontal"){
+		<div class="col-md-3">
+			@for(n<-(0 to 15)){
+					@helper.input(pricesForm("names"+"["+n+"]"), '_class ->"form-group",'_label->"Имя"){ (id, name, value, args) =>
+   						<input type="text" value="@value" name="@name" id="@id" @toHtmlArgs(args) class="form-control" readonly>
+   					}
+					@helper.input(pricesForm("prices" +"["+n+"]"), '_class ->"form-group",'_label->"Цена"){ (id, name, value, args) =>
+   						<input type="text" value="@value" name="@name" id="@id" @toHtmlArgs(args) class="form-control" >
+   					}
+			}
+		</div>
+		<div class="col-md-3">
+			@for(n<-(16 to 26)){
+					@helper.input(pricesForm("names"+"["+n+"]"), '_class ->"form-group",'_label->"Имя"){ (id, name, value, args) =>
+   						<input type="text" value="@value" name="@name" id="@id" @toHtmlArgs(args) class="form-control" readonly>
+   					}
+					@helper.input(pricesForm("prices"+"["+n+"]"), '_class ->"form-group",'_label->"Цена"){ (id, name, value, args) =>
+   						<input type="text" value="@value" name="@name" id="@id" @toHtmlArgs(args) class="form-control" >
+   					}
+			}
+		</div>
+		<button type="submit" class="bth btn-primary btn-lg">Сохранить</button>
+	}
+}
 

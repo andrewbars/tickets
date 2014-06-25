@@ -19,5 +19,8 @@ GET 	/events/:id/remove			controllers.Events.remove(id:Long)
 GET 	/events/:id/edit			controllers.Events.edit(id: Long)
 POST	/events/edit				controllers.Events.update
 
+GET		/events/:id/edit/prices		controllers.Seats.setPrices(id: Long)
+POST	/events/:id/edit/prices		controllers.Seats.savePrices(id: Long)
+
 
 	

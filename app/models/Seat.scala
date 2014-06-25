@@ -44,12 +44,12 @@ object Sector {
   def insert(sectors: List[Sector]) = {
     inTransaction {
       sectorsTable.insert(sectors)
-      val sits = for {
+     /* val sits = for {
         s <- sectors
         r <- if (s.numOfSeats == 1000) (1 to 20) else (1 to 10)
         n <- if (s.numOfSeats == 1000) (1 to 50) else (1 to 20)
       } yield Seat(0, s.id, r, n, false, None)
-      Seat.insert(sits)
+      Seat.insert(sits)*/
     }
   }
   def updatePrices(eventID: Long, newPrices: Map[String, Int]) = inTransaction {

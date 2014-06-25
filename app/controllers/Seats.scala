@@ -18,15 +18,15 @@ object Seats extends Controller {
     "names" -> list(text),
     "prices" -> list(number))((names, prices) => (names zip prices).toMap)(map => Some(map.toList.unzip)))
 
-  def setPrices(eventID: Long) = Action { implicit request =>
+  def setPrices(implicit eventID: Long) = Action { implicit request =>
     Event.getSectors(eventID) match {
       case None => Redirect(routes.Events.list()).flashing("error" -> (Messages("events.notfound")))
       case Some(sectors) =>
-        val sectorPrices = (for (s <- sectors) yield (s.name, s.sitPrice)).toMap
+        val sectorPrices = (for (s <- (sectors.sortWith((s1,s2)=>s1.id>s2.id))) yield (s.name, s.sitPrice)).toMap
         Ok(views.html.events.prices(sectorPriceForm.fill(sectorPrices)))
     }
   }
-  def savePrices(eventID: Long) = Action { implicit request =>
+  def savePrices(implicit eventID: Long) = Action { implicit request =>
     sectorPriceForm.bindFromRequest.fold(
       formWithErrors => Ok(views.html.events.prices(formWithErrors)),
       pricesMap => {

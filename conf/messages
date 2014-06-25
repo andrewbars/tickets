@@ -22,4 +22,6 @@ events.form.entertype = Введите тип события (не более 20
 events.form.entername = Введите имя события (не более 100 символов)
 events.form.enterdscr = Введите имя события (не более 500 символов)
 
+pricse.set.name = Редактирование цен билетов
+
 tickets.order = Заказ билетов
