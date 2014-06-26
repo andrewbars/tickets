@@ -61,7 +61,7 @@ object Events extends Controller {
       success = {
         event =>
           models.Event.insert(event)
-          Redirect(routes.Events.list()).flashing("success" -> ("Событие добавлено!"))
+          Redirect(routes.Seats.setPrices(event.id)).flashing("success" -> ("Событие добавлено!"))
       })
   }
 

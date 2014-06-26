@@ -18,9 +18,9 @@ case class Sector(
   lazy val event: ManyToOne[Event] =
     Database.eventsToSectors.right(this)
   lazy val seats: OneToMany[Seat] =
-  Database.sectorsToSeats.left(this)
+    Database.sectorsToSeats.left(this)
   def updatePrice(newPrice: Int) =
-    Sector(id, name, numOfSeats, newPrice, eventID)
+    this.copy(sitPrice = newPrice)
 }
 
 case class Seat(
@@ -29,13 +29,13 @@ case class Seat(
   val rowNumber: Int,
   val num: Int,
   val sold: Boolean,
-  val sellID: Option[Long]) extends KeyedEntity[Long] {
+  val saleID: Option[Long]) extends KeyedEntity[Long] {
   def this() = this(0, 0, 0, 0, false, Some(0))
   lazy val sector: ManyToOne[Sector] =
     Database.sectorsToSeats.right(Seat.this)
   lazy val sell: ManyToOne[Sale] =
     salesToSeats.right(this)
-    def sell(sID:Long)=Seat(id,sectorID,rowNumber,num,true,Some(sID))
+  def sell(sID: Long) = this.copy(saleID = Some(sID))
 }
 
 object Sector {
@@ -44,12 +44,6 @@ object Sector {
   def insert(sectors: List[Sector]) = {
     inTransaction {
       sectorsTable.insert(sectors)
-     /* val sits = for {
-        s <- sectors
-        r <- if (s.numOfSeats == 1000) (1 to 20) else (1 to 10)
-        n <- if (s.numOfSeats == 1000) (1 to 50) else (1 to 20)
-      } yield Seat(0, s.id, r, n, false, None)
-      Seat.insert(sits)*/
     }
   }
   def updatePrices(eventID: Long, newPrices: Map[String, Int]) = inTransaction {
@@ -61,9 +55,23 @@ object Sector {
   def getByID(id: Long) = inTransaction {
     sectorsTable.lookup(id)
   }
+  def sectorsByEventIdQ(id: Long) = inTransaction {
+    sectorsTable.where(s => s.eventID === id)
+  }
+  def deleteByEventID(id: Long) = inTransaction {
+    Seat.deleteAllByEventID(id)
+    sectorsTable.delete(sectorsByEventIdQ(id))
+  }
 }
 
 object Seat {
-  def insert(sits: List[Seat]) = inTransaction(Database.sitsTable.insert(sits))
+  def insert(sits: Iterable[Seat]) = inTransaction(Database.sitsTable.insert(sits))
   def update(sits: List[Seat]) = inTransaction(Database.sitsTable.update(sits))
+  def seatsByEventIdQ(id: Long) = from(sitsTable, sectorsTable) { (seat, sector) =>
+    where(sector.eventID === id and seat.sectorID === sector.id)
+    select(seat)
+  }
+  def deleteAllByEventID(id: Long) = inTransaction {
+    sitsTable.delete(seatsByEventIdQ(id))
+  }
 }

@@ -20,7 +20,7 @@ case class Event(
 }
 
 object Event {
-  import Database.eventsTable
+  import Database.{ eventsTable, sectorsTable, sitsTable }
 
   def allQ: Query[Event] = from(eventsTable)(event => select(event) orderBy (event.date asc))
   def getAll = inTransaction(allQ.toList)
@@ -39,10 +39,13 @@ object Event {
   }
   def update(event: Event) = inTransaction(eventsTable.update(event))
   def save(event: Event) = inTransaction(eventsTable.insertOrUpdate(event))
-  def removeById(id: Long) = inTransaction(eventsTable.deleteWhere(_.id === id))
+  def removeById(id: Long) = inTransaction {
+    Sector.deleteByEventID(id)
+    eventsTable.deleteWhere(_.id === id)
+  }
   def getById(id: Long) = getAll.find(_.id == id)
-  def getSectors(id:Long):Option[List[Sector]] = getById(id) match{
-    case None=>None
-    case Some(event)=>inTransaction(Some(event.sectors.toList))
+  def getSectors(id: Long): Option[List[Sector]] = getById(id) match {
+    case None => None
+    case Some(event) => inTransaction(Some(event.sectors.toList))
   }
 }
