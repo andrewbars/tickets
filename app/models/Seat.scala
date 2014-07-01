@@ -12,7 +12,8 @@ import Database._
 case class Sector(
   val id: Long,
   val name: String,
-  val numOfSeats: Int,
+  val numOfRows: Int,
+  val seatsInRow: Int,
   val sitPrice: Int,
   val eventID: Long) extends KeyedEntity[Long] {
   lazy val event: ManyToOne[Event] =
@@ -61,6 +62,9 @@ object Sector {
   def deleteByEventID(id: Long) = inTransaction {
     Seat.deleteAllByEventID(id)
     sectorsTable.delete(sectorsByEventIdQ(id))
+  }
+  def orderedSeatsInSector(sector: Sector) = inTransaction {
+    sector.seats.toList
   }
 }
 

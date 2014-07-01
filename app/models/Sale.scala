@@ -26,14 +26,10 @@ object Sale {
     val event = sector.event.single
     val sale = Sale(0,event.id,new Timestamp(new Date().getTime()))
     salesTable.insert(sale)
-    val seatsFromSector = sector.seats.toList
-    val seatstoUpdate = (for {
+    val seatstoInsert = (for {
       row <- sitsMap.zipWithIndex
       num <- row._1
-      seat <- seatsFromSector
-      if seat.rowNumber == (row._2+1)
-      if seat.num == num
-    } yield seat)
-    Seat.update(seatstoUpdate map(s=>s.sell(sale.id)))
+    } yield Seat(0,sectorID,row._2+1,num,true,Some(sale.id)))
+    Seat.insert(seatstoInsert)
   }
 }

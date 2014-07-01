@@ -20,13 +20,22 @@ object Sales extends Controller {
       "rows" -> list(rowMap)
       )(rows => rows)(rows => Some(rows))
   }
-  def newSale = Action { implicit request =>
-    NotImplemented
+  def newSale(sectorID: Long, eventID:Long) = Action { implicit request =>
+    val sector=Sector.getByID(sectorID)
+    sector match{
+      case None =>Redirect(routes.Events.show(eventID)).flashing("error"->"Задан неверный номер сектора")
+      case Some(sec)=>
+    	Ok(views.html.sales.sale(sec, eventID, Sector.orderedSeatsInSector(sec))(saleForm))
+    	}
   }
   
-  def saveSale(sectorID:Long) = Action{implicit request =>
+  def saveSale(sectorID:Long, eventID:Long) = Action{implicit request =>
     saleForm.bindFromRequest.fold(
-      formWithErrors=>NotImplemented,
+      formWithErrors=>
+        {
+          val sec=Sector.getByID(sectorID).get
+          Ok(views.html.sales.sale(sec, eventID, Sector.orderedSeatsInSector(sec))(formWithErrors))
+        },
       sectorMap=>{
         Sale.addNew(sectorMap, sectorID)
         Redirect(routes.Events.list()).flashing("success" -> "Сохранено!")

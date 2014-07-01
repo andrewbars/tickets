@@ -11,16 +11,20 @@ GET     /assets/*file               controllers.Assets.at(path="/public", file)
 #List of events page
 GET		/events/					controllers.Events.list(archive:Boolean?=false)
 #Добавление нового события
-GET		/events/add				controllers.Events.addNew
-POST	/events/add				controllers.Events.insert
+GET		/events/add					controllers.Events.addNew
+POST	/events/add					controllers.Events.insert
 
 GET		/events/:id					controllers.Events.show(id:Long)
 GET 	/events/:id/remove			controllers.Events.remove(id:Long)
 GET 	/events/:id/edit			controllers.Events.edit(id: Long)
 POST	/events/edit				controllers.Events.update
-
+#Редактирование цен билетов для события
 GET		/events/:id/edit/prices		controllers.Seats.setPrices(id: Long)
 POST	/events/:id/edit/prices		controllers.Seats.savePrices(id: Long)
+
+GET		/events/:eventID/:sectorID		controllers.Seats.sectorSeatsMap(eventID:Long, sectorID:Long)
+GET		/events/:eventID/:sectorID/sale	controllers.Sales.newSale(sectorID:Long, eventID:Long)
+POST	/events/:eventID/:sectorID/sale	controllers.Sales.saveSale(sectorID:Long, eventID:Long)
 
 
 	

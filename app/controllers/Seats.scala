@@ -36,10 +36,19 @@ object Seats extends Controller {
   }
   
   val rowMap =mapping(
-	"checkedSits"->list(boolean)
-  )(checkedSits=>
+	"checkedSeats"->list(boolean)
+  )(checkedSeats=>
     for{
-      s<-checkedSits.zipWithIndex
+      s<-checkedSeats.zipWithIndex
       if s._1
     }yield (s._2+1))(numList=>Some((for(n<-(1 to 50))yield numList contains n).toList))
+    
+    def sectorSeatsMap (eventID:Long, sectorID:Long)=Action {implicit request=>
+    	val sector=Sector.getByID(sectorID)
+    	sector match{
+    	  case None =>Redirect(routes.Events.show(eventID)).flashing("error"->"Задан неверный номер сектора")
+    	  case Some(sec)=>
+    	    Ok(views.html.seats.sectorMap(sec, Sector.orderedSeatsInSector(sec)))
+    	}
+  }
 }

@@ -1,0 +1,18 @@
+@* sectorMap Template File *@
+@(sector:Sector, orderedSeats:List[Seat])(implicit flash:Flash)
+
+
+@main("Сектор "+sector.name){
+		<table class="table table-condensed">
+		@for(row<-1 to sector.numOfRows) {
+			<tr>
+				<td class="success">@(row)</td>
+				@for(seat<-1 to sector.seatsInRow) {
+					<td 
+					class= "@if(orderedSeats
+						exists(s=>s.rowNumber==row&&s.num==seat)){danger}else{info}">@seat</td>
+				}
+			</tr>	
+		}
+		</table>
+}

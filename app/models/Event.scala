@@ -27,10 +27,10 @@ object Event {
   def insert(event: Event) = {
     val sectors = (for {
       n <- 1 to 25
-    } yield Sector(0, "" + n, 1000, 0, 0)).toList
+    } yield Sector(0, "" + n, 20, 50, 0, 0)).toList
     val vipSectors = for {
       n <- List("VIP A", "VIP D")
-    } yield Sector(0, n, 200, 0, 0)
+    } yield Sector(0, n, 10, 20, 0, 0)
     val allSectors = sectors ++ vipSectors
     inTransaction {
       eventsTable.insert(event)
