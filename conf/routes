@@ -22,7 +22,6 @@ POST	/events/edit				controllers.Events.update
 GET		/events/:id/edit/prices		controllers.Seats.setPrices(id: Long)
 POST	/events/:id/edit/prices		controllers.Seats.savePrices(id: Long)
 
-#GET		/events/:eventID/:sectorID		controllers.Seats.sectorSeatsMap(eventID:Long, sectorID:Long)
 GET		/events/:eventID/:sectorID/sale	controllers.Sales.newSale(sectorID:Long, eventID:Long)
 POST	/events/:eventID/:sectorID/sale	controllers.Sales.saveSale(sectorID:Long, eventID:Long)
 

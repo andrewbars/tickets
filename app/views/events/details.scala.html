@@ -3,35 +3,37 @@
 
 @main(event.name){
 	<div class="container">
-		<ul class="nav nav-tabs">
-			<li><a href="@routes.Events.edit(event.id)" class="btn btn-default active" role="button">@Messages("edit")</a></li>
-			<li><a href="@routes.Seats.setPrices(event.id)" class="btn btn-default active" role="button">@Messages("prices.set.name")</a></li>
-			<li><a class="btn btn-danger active" href="@routes.Events.remove(event.id)"role="button">@Messages("delete")</a></li>	
-		</ul>
-	</div>
-	<div class="jumbotron">
-		<h1>@(event.tp+" "+event.name)</h1>
-		<h2>@(Dates.dateTimeFormat.format(event.date))</h2>
-		<p>@event.dscr</p>
-	</div>
-	@if(!controllers.Events.isArchive(event)){
 		<div class="container">
-			<li class="dropdown">
-				<button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
-					Выберете сектор для просмотра свободных мест
-				<span class="caret"></span></button>
-			    	<ul class="dropdown-menu scrollable-menu">
-			    		@for(sec<-Event.getSectors(event.id).get){
-			    			<li><a href="@routes.Events.show(event.id, sec.id)">@sec.name</a></li>
-			    		}
-			        </ul>
-			</li>
-			@if(sector.isDefined){
-				@seats.sectorMap(sector.get,Sector.orderedSeatsInSector(sector.get))
-				<p><a class="btn btn-primary btn-lg active" role="button" href="@routes.Sales.newSale(sector.get.id, event.id)">@Messages("tickets.order")</a>
-			}else{
-				<img src="@routes.Assets.at("images/field.jpg")" class="img-responsive"/>
-			}
+			<ul class="nav nav-tabs">
+				<li><a href="@routes.Events.edit(event.id)" class="btn btn-default active" role="button">@Messages("edit")</a></li>
+				@if(!controllers.Events.isArchive(event)){<li><a href="@routes.Seats.setPrices(event.id)" class="btn btn-default active" role="button">@Messages("prices.set.name")</a></li>}
+				<li><a class="btn btn-danger active" href="@routes.Events.remove(event.id)"role="button">@Messages("delete")</a></li>	
+			</ul>
+		</div>
+		<div class="jumbotron">
+			<h1>@(event.tp+" "+event.name)</h1>
+			<h2>@(Dates.dateTimeFormat.format(event.date))</h2>
+			<p>@event.dscr</p>
+		</div>
+		@if(!controllers.Events.isArchive(event)){
+			<div class="container">
+				<li class="dropdown">
+					<button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+						Выберете сектор для просмотра свободных мест
+					<span class="caret"></span></button>
+				    	<ul class="dropdown-menu scrollable-menu">
+				    		@for(sec<-Event.getSectors(event.id).get){
+				    			<li><a href="@routes.Events.show(event.id, sec.id)">@sec.name</a></li>
+				    		}
+				        </ul>
+				</li>
+				@if(sector.isDefined){
+					@seats.sectorMap(sector.get,Sector.orderedSeatsInSector(sector.get))
+					<p><a class="btn btn-primary btn-lg active" role="button" href="@routes.Sales.newSale(sector.get.id, event.id)">@Messages("tickets.order")</a>
+				}else{
+					<img src="@routes.Assets.at("images/field.jpg")" class="img-responsive"/>
+				}
+			</div>
 		</div>
 	}
 }

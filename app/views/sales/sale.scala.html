@@ -2,24 +2,21 @@
 
 @(sector:Sector, eventID:Long, orderedSeats:List[Seat])(rowForm:Form[List[List[Int]]])(implicit flash:Flash)
 
-
 @main("Сектор "+sector.name){
 	@helper.form(action= routes.Sales.saveSale(sector.id, eventID), 'role->"form", 'class->"form-horizontal"){
-		<table class="table table-condensed">
+		<table class="table table-condensed table-responsive table-hover">
 		@for(row<-1 to sector.numOfRows) {
-			<tr>
+			<tr class="small-row">
 				<td class="success">@(row)</td>
 				@for(seat<-1 to sector.seatsInRow) {
 					<td 
 					class= "@if(orderedSeats
 						exists(s=>s.rowNumber==row&&s.num==seat)){danger}else{info}">
-					@helper.input(rowForm("rows"+"["+row+"].checkedSeats["+seat+"]"), '_class ->"checkbox",'_label->seat){ (id, name, value, args) =>
-   						<input type="checkbox" id="@id" name="@name"  @toHtmlArgs(args) value="true" class="checkbox"
+					@helper.input(rowForm("rows"+"["+row+"].checkedSeats["+seat+"]"), '_class ->"checkbox-inline",'_label->seat){ (id, name, value, args) =>
+   						<input type="checkbox" id="@id" name="@name"  @toHtmlArgs(args) value="true" class="checkbox-inline"
    						@if(orderedSeats
 						exists(s=>s.rowNumber==row&&s.num==seat)){disabled}>
-   					}
-					@helper.input(rowForm("rows"+"["+row+"].checkedSeats["+seat+"]"),'_label->""){ (id, name, value, args) =>
-   						<input type="hidden" id="@id" name="@name"  @toHtmlArgs(args) value="false" class="checkbox">
+						<input type="hidden" id="@id" name="@name"  @toHtmlArgs(args) value="false">
    					}
 					</td>
 				}

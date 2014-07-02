@@ -14,15 +14,18 @@ import Dates._
 
 object Seats extends Controller {
 
+
+  
   val sectorPriceForm = Form(mapping(
     "names" -> list(text),
-    "prices" -> list(number))((names, prices) => (names zip prices).toMap)(map => Some(map.toList.unzip)))
+    "prices" -> list(number))((names, prices) => (names zip prices).toMap)(priceMap => 
+      Some((for(name<-Sector.sectorNames)yield(name, priceMap(name))).unzip)))
 
   def setPrices(implicit eventID: Long) = Action { implicit request =>
     Event.getSectors(eventID) match {
       case None => Redirect(routes.Events.list()).flashing("error" -> (Messages("events.notfound")))
       case Some(sectors) =>
-        val sectorPrices = (for (s <- (sectors.sortWith((s1,s2)=>s1.id>s2.id))) yield (s.name, s.sitPrice)).toMap
+        val sectorPrices = (for (s <- (sectors)) yield (s.name, s.sitPrice)).toMap
         Ok(views.html.events.prices(sectorPriceForm.fill(sectorPrices)))
     }
   }
@@ -42,14 +45,5 @@ object Seats extends Controller {
       s<-checkedSeats.zipWithIndex
       if s._1
     }yield (s._2+1))(numList=>Some((for(n<-(1 to 50))yield numList contains n).toList))
-    /*
-    def sectorSeatsMap (eventID:Long, sectorID:Long)=Action {implicit request=>
-    	val sector=Sector.getByID(sectorID)
-    	sector match{
-    	  case None =>Redirect(routes.Events.show(eventID)).flashing("error"->"Задан неверный номер сектора")
-    	  case Some(sec)=>
-    	    Ok(views.html.seats.sectorMap(sec, Sector.orderedSeatsInSector(sec)))
-    	}
-  }
-  */
+
 }

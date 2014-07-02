@@ -4,28 +4,40 @@
 @import views.helpers.bootstrap._
 
 @main(Messages("prices.set.name")){
-	@helper.form(action= routes.Seats.savePrices(id), 'role->"form", 'class->"form-horizontal"){
-		<div class="col-md-3">
-			@for(n<-(0 to 15)){
-					@helper.input(pricesForm("names"+"["+n+"]"), '_class ->"form-group",'_label->"Имя"){ (id, name, value, args) =>
-   						<input type="text" value="@value" name="@name" id="@id" @toHtmlArgs(args) class="form-control" readonly>
-   					}
-					@helper.input(pricesForm("prices" +"["+n+"]"), '_class ->"form-group",'_label->"Цена"){ (id, name, value, args) =>
-   						<input type="number" value="@value" name="@name" id="@id" @toHtmlArgs(args) class="form-control" >
-   					}
-			}
-		</div>
-		<div class="col-md-3">
-			@for(n<-(16 to 26)){
-					@helper.input(pricesForm("names"+"["+n+"]"), '_class ->"form-group",'_label->"Имя"){ (id, name, value, args) =>
-   						<input type="text" value="@value" name="@name" id="@id" @toHtmlArgs(args) class="form-control" readonly>
-   					}
-					@helper.input(pricesForm("prices"+"["+n+"]"), '_class ->"form-group",'_label->"Цена"){ (id, name, value, args) =>
-   						<input type="number" value="@value" name="@name" id="@id" @toHtmlArgs(args) class="form-control" >
-   					}
-			}
-		</div>
-		<button type="submit" class="bth btn-primary btn-lg">@Messages("save")</button>
-	}
+	<div class="container">
+		@helper.form(action= routes.Seats.savePrices(id), 'role->"form", 'class->"form-inline"){
+			<div class="col-md-3">
+				@for(n<-(0 to 8)){
+						@helper.input(pricesForm("names"+"["+n+"]"), '_class ->"form-group",'_label->"Имя"){ (id, name, value, args) =>
+	   						<input type="text" value="@value" name="@name" id="@id" @toHtmlArgs(args) class="form-control" readonly>
+	   					}
+						@helper.input(pricesForm("prices" +"["+n+"]"), '_class ->"form-group",'_label->"Цена"){ (id, name, value, args) =>
+	   						<input type="number" value="@value" name="@name" id="@id" @toHtmlArgs(args) class="form-control" >
+	   					}
+				}
+			</div>
+			<div class="col-md-3">
+				@for(n<-(9 to 17)){
+						@helper.input(pricesForm("names"+"["+n+"]"), '_class ->"form-group",'_label->"Имя"){ (id, name, value, args) =>
+	   						<input type="text" value="@value" name="@name" id="@id" @toHtmlArgs(args) class="form-control" readonly>
+	   					}
+						@helper.input(pricesForm("prices"+"["+n+"]"), '_class ->"form-group",'_label->"Цена"){ (id, name, value, args) =>
+	   						<input type="number" value="@value" name="@name" id="@id" @toHtmlArgs(args) class="form-control" >
+	   					}
+				}
+			</div>
+			<div class="col-md-3">
+				@for(n<-(18 to 26)){
+						@helper.input(pricesForm("names"+"["+n+"]"), '_class ->"form-group",'_label->"Имя"){ (id, name, value, args) =>
+	   						<input type="text" value="@value" name="@name" id="@id" @toHtmlArgs(args) class="form-control" readonly>
+	   					}
+						@helper.input(pricesForm("prices"+"["+n+"]"), '_class ->"form-group",'_label->"Цена"){ (id, name, value, args) =>
+	   						<input type="number" value="@value" name="@name" id="@id" @toHtmlArgs(args) class="form-control" >
+	   					}
+				}
+			</div>
+			<button type="submit" class="bth btn-primary btn-lg">@Messages("save")</button>
+		}
+	</div>
 }
 

@@ -3,3 +3,9 @@
     max-height: 200px;
     overflow-x: hidden;
 }
+
+tr {
+width: 100%;
+display: inline-table;
+height:10px;    
+}

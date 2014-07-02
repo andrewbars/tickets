@@ -1,6 +1,9 @@
 @* sectorMap Template File *@
 @(sector:Sector, orderedSeats:List[Seat])
-
+	
+	
+	<h3>Сектор: @sector.name</h3>
+	<h5>Цена билета: @sector.sitPrice</h5>
 	<table class="table table-condensed">
 		@for(row<-1 to sector.numOfRows) {
 			<tr>
