@@ -37,9 +37,19 @@ object Sales extends Controller {
           Ok(views.html.sales.sale(sec, eventID, Sector.orderedSeatsInSector(sec))(formWithErrors))
         },
       sectorMap=>{
-        Sale.addNew(sectorMap, sectorID)
-        Redirect(routes.Events.list()).flashing("success" -> "Сохранено!")
+        val sale = Sale(0, eventID, new Timestamp(new Date().getTime()))
+        Sale.addNew(sectorMap, sectorID, sale)
+        Redirect(routes.Sales.show(sale.id)).flashing("success" -> "Сохранено!")
       }
     )
+  }
+  def show(saleID:Long)=Action{implicit request=>
+  	Sale.getByID(saleID) match{
+  	  case None=> Redirect(routes.Events.list()).flashing("error" -> "Продажа с таким ID не найдена")
+  	  case Some(sale)=>{
+  	    val event=Sale.event(sale)
+  	    Ok(views.html.sales.details(sale,event))
+  	  }
+  	}
   }
 }

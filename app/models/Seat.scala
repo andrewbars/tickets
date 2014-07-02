@@ -78,4 +78,7 @@ object Seat {
   def deleteAllByEventID(id: Long) = inTransaction {
     sitsTable.delete(seatsByEventIdQ(id))
   }
+  def sector(seat:Seat)=inTransaction{
+    seat.sector.single
+  }
 }

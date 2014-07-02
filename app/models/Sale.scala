@@ -21,15 +21,28 @@ case class Sale(
 }
 
 object Sale {
-  def addNew(sitsMap: List[List[Int]], sectorID: Long) = inTransaction {
+  def addNew(sitsMap: List[List[Int]], sectorID: Long, sale:Sale) = inTransaction {
     val sector = Sector.getByID(sectorID).get
     val event = sector.event.single
-    val sale = Sale(0,event.id,new Timestamp(new Date().getTime()))
     salesTable.insert(sale)
     val seatstoInsert = (for {
       row <- sitsMap.zipWithIndex
       num <- row._1
-    } yield Seat(0,sectorID,row._2+1,num,true,Some(sale.id)))
+    } yield Seat(0, sectorID, row._2 + 1, num, true, Some(sale.id)))
     Seat.insert(seatstoInsert)
+  }
+
+  def saleByIdQ(saleID: Long) = salesTable.lookup(saleID)
+  def getByID(saleID: Long) = inTransaction {
+	  saleByIdQ(saleID) match{
+	    case None=>None
+	    case Some(sale)=>Some(sale)
+	  }
+  }
+  def event(sale:Sale)=inTransaction{
+    sale.event.single
+  }
+  def seats(sale:Sale)=inTransaction{
+    sale.sits.toList
   }
 }
