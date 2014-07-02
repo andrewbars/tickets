@@ -42,7 +42,7 @@ object Seats extends Controller {
       s<-checkedSeats.zipWithIndex
       if s._1
     }yield (s._2+1))(numList=>Some((for(n<-(1 to 50))yield numList contains n).toList))
-    
+    /*
     def sectorSeatsMap (eventID:Long, sectorID:Long)=Action {implicit request=>
     	val sector=Sector.getByID(sectorID)
     	sector match{
@@ -51,4 +51,5 @@ object Seats extends Controller {
     	    Ok(views.html.seats.sectorMap(sec, Sector.orderedSeatsInSector(sec)))
     	}
   }
+  */
 }

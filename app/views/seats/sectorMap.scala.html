@@ -1,9 +1,7 @@
 @* sectorMap Template File *@
-@(sector:Sector, orderedSeats:List[Seat])(implicit flash:Flash)
+@(sector:Sector, orderedSeats:List[Seat])
 
-
-@main("Сектор "+sector.name){
-		<table class="table table-condensed">
+	<table class="table table-condensed">
 		@for(row<-1 to sector.numOfRows) {
 			<tr>
 				<td class="success">@(row)</td>
@@ -15,4 +13,5 @@
 			</tr>	
 		}
 		</table>
-}
+		
+
