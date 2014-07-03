@@ -45,4 +45,5 @@ object Sale {
   def seats(sale:Sale)=inTransaction{
     sale.sits.toList
   }
+  def deleteByEventID(eventID:Long)=inTransaction(salesTable.deleteWhere(_.eventID===eventID))
 }

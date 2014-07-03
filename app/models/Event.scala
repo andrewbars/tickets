@@ -42,6 +42,7 @@ object Event {
   def removeById(id: Long) = inTransaction {
     Sector.deleteByEventID(id)
     eventsTable.deleteWhere(_.id === id)
+    Sale.deleteByEventID(id)
   }
   def getById(id: Long) = getAll.find(_.id == id)
   def getSectors(id: Long): Option[List[Sector]] = getById(id) match {
