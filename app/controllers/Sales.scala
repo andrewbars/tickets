@@ -15,11 +15,20 @@ import Seats._
 import com.mysql.jdbc.NotImplemented
 
 object Sales extends Controller {
-  def saleForm = Form {
+  val saleForm = Form {
     mapping(
       "rows" -> list(rowMap)
       )(rows => rows)(rows => Some(rows))
   }
+  
+  val seatCheckForm = Form(
+      mapping (
+    	"event"-> longNumber,
+    	"sector"-> text,
+    	"row"->number,
+    	"num"->number
+      )((event,sector,row,num)=>(event,sector,row,num))(tup=>Some(tup))
+  )
   def newSale(sectorID: Long, eventID:Long) = Action { implicit request =>
     val sector=Sector.getByID(sectorID)
     sector match{
