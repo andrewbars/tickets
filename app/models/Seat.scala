@@ -47,7 +47,7 @@ object Sector {
       sectorsTable.insert(sectors)
     }
   }
-  def event(sector:Sector)=inTransaction(sector.event.single)
+  def event(sector: Sector) = inTransaction(sector.event.single)
   def updatePrices(eventID: Long, newPrices: Map[String, Int]) = inTransaction {
     sectorsTable.update {
       val event = Event.getById(eventID).get
@@ -67,10 +67,10 @@ object Sector {
   def orderedSeatsInSector(sector: Sector) = inTransaction {
     sector.seats.toList
   }
-  def findByNameFromEvent(event:Event, name:String)=inTransaction{
-    event.sectors.find(s=>s.name.equalsIgnoreCase(name))
+  def findByNameFromEvent(event: Event, name: String) = inTransaction {
+    event.sectors.find(s => s.name.equalsIgnoreCase(name))
   }
-  def seats(sector:Sector)=inTransaction(sector.seats.toList)
+  def seats(sector: Sector) = inTransaction(sector.seats.toList)
 }
 
 object Seat {
@@ -83,8 +83,8 @@ object Seat {
   def deleteAllByEventID(id: Long) = inTransaction {
     sitsTable.delete(seatsByEventIdQ(id))
   }
-  def sector(seat:Seat)=inTransaction{
+  def sector(seat: Seat) = inTransaction {
     seat.sector.single
   }
-  def sale(seat:Seat)=inTransaction(Sector.event(Seat.sector(seat)))
+  def sale(seat: Seat) = inTransaction(Sector.event(Seat.sector(seat)))
 }

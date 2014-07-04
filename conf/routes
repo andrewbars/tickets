@@ -25,6 +25,8 @@ POST	/events/:id/edit/prices		controllers.Seats.savePrices(id: Long)
 GET		/events/:eventID/:sectorID/sale	controllers.Sales.newSale(sectorID:Long, eventID:Long)
 POST	/events/:eventID/:sectorID/sale	controllers.Sales.saveSale(sectorID:Long, eventID:Long)
 GET		/sales/:saleID					controllers.Sales.show(saleID: Long)
+GET		/sales/:saleID/confirm			controllers.Sales.confirmSale(saleID: Long)
+GET		/sales/:saleID/revert			controllers.Sales.revertSale(saleID: Long)
 
 #Проверка доступности конкретного места
 GET 	/checkseat						controllers.Seats.checkSeat

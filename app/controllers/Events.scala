@@ -2,7 +2,7 @@ package controllers
 
 import play.api.mvc.Controller
 import play.api.mvc.{ Action, Flash }
-import models.{Event, Sector}
+import models.{ Event, Sector }
 import java.util.{ Date, Calendar }
 import java.sql.Timestamp
 import java.text.{ SimpleDateFormat, ParsePosition }
@@ -23,13 +23,13 @@ object Events extends Controller {
         Event.getAll.dropWhile(isArchive(_))
       Ok(views.html.events.list(events))
   }
-  def show(id: Long, sectorID:Long) = Action {
+  def show(id: Long, sectorID: Long) = Action {
     implicit request =>
       val e = Event.getById(id)
       e match {
         case None => Redirect(routes.Events.list()).flashing("error" -> (Messages("events.notfound")))
         case Some(event) => {
-          val sec=Sector.getByID(sectorID)
+          val sec = Sector.getByID(sectorID)
           Ok(views.html.events.details(event, sec))
         }
       }

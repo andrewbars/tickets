@@ -14,7 +14,8 @@ case class Sale(
   id: Long,
   eventID: Long,
   date: Timestamp,
-  price:Int) extends KeyedEntity[Long] {
+  price: Int,
+  confirmed: Boolean) extends KeyedEntity[Long] {
   lazy val event: ManyToOne[Event] =
     Database.eventsToSells.right(Sale.this)
   lazy val sits: OneToMany[Seat] =
@@ -22,7 +23,7 @@ case class Sale(
 }
 
 object Sale {
-  def addNew(sitsMap: List[List[Int]], sectorID: Long, sale:Sale) = inTransaction {
+  def addNew(sitsMap: List[List[Int]], sectorID: Long, sale: Sale) = inTransaction {
     val sector = Sector.getByID(sectorID).get
     val event = sector.event.single
     salesTable.insert(sale)
@@ -35,16 +36,18 @@ object Sale {
 
   def saleByIdQ(saleID: Long) = salesTable.lookup(saleID)
   def getByID(saleID: Long) = inTransaction {
-	  saleByIdQ(saleID) match{
-	    case None=>None
-	    case Some(sale)=>Some(sale)
-	  }
+    saleByIdQ(saleID) match {
+      case None => None
+      case Some(sale) => Some(sale)
+    }
   }
-  def event(sale:Sale)=inTransaction{
+  def event(sale: Sale) = inTransaction {
     sale.event.single
   }
-  def seats(sale:Sale)=inTransaction{
+  def seats(sale: Sale) = inTransaction {
     sale.sits.toList
   }
-  def deleteByEventID(eventID:Long)=inTransaction(salesTable.deleteWhere(_.eventID===eventID))
+  def deleteByEventID(eventID: Long) = inTransaction(salesTable.deleteWhere(_.eventID === eventID))
+  def confirmSale(sale: Sale) = inTransaction(salesTable.update(sale.copy(confirmed = true)))
+  def revertSale(sale: Sale) = inTransaction(if (!sale.confirmed) salesTable.deleteWhere(_.id === sale.id))
 }
