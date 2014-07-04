@@ -9,12 +9,14 @@
 			<h3>@("Дата события:" + Dates.dateTimeFormat.format(event.date))</h3>
 			<p>Продажа совершена: @Dates.dateTimeFormat.format(sale.date)</p>
 			<h3>@("Сектор: " + Seat.sector(Sale.seats(sale).head).name)</h3>
+			<h3>@("Цена билета: " + sale.price+" грн.")</h3>
 			<dl class="dl-horizontal">
 				<dt>Проданные места:</dt>
 				@for(seat<-Sale.seats(sale)){
 					<dd>@("Ряд: "+seat.rowNumber+", место: "+ seat.num)</dd>
 				}
 			</dl>
+			<h3>@("Итого к оплате: " + sale.price*Sale.seats(sale).length+" грн.")</h3>
 			<p><a class="btn btn-primary btn-lg active" role="button" href="@routes.Events.show(event.id)">Вернуться к событию</a>
 		</div>
 	</div>

@@ -32,14 +32,14 @@ object Sales extends Controller {
   }
   
   def saveSale(sectorID:Long, eventID:Long) = Action{implicit request =>
+    val sec=Sector.getByID(sectorID).get
     saleForm.bindFromRequest.fold(
       formWithErrors=>
         {
-          val sec=Sector.getByID(sectorID).get
           Ok(views.html.sales.sale(sec, eventID, Sector.orderedSeatsInSector(sec))(formWithErrors))
         },
       sectorMap=>{
-        val sale = Sale(0, eventID, new Timestamp(new Date().getTime()))
+        val sale = Sale(0, eventID, new Timestamp(new Date().getTime()), sec.sitPrice)
         Sale.addNew(sectorMap, sectorID, sale)
         Redirect(routes.Sales.show(sale.id)).flashing("success" -> "Сохранено!")
       }

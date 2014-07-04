@@ -13,7 +13,8 @@ import Database._
 case class Sale(
   id: Long,
   eventID: Long,
-  date: Timestamp) extends KeyedEntity[Long] {
+  date: Timestamp,
+  price:Int) extends KeyedEntity[Long] {
   lazy val event: ManyToOne[Event] =
     Database.eventsToSells.right(Sale.this)
   lazy val sits: OneToMany[Seat] =
