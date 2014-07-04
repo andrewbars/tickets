@@ -21,14 +21,7 @@ object Sales extends Controller {
       )(rows => rows)(rows => Some(rows))
   }
   
-  val seatCheckForm = Form(
-      mapping (
-    	"event"-> longNumber,
-    	"sector"-> text,
-    	"row"->number,
-    	"num"->number
-      )((event,sector,row,num)=>(event,sector,row,num))(tup=>Some(tup))
-  )
+
   def newSale(sectorID: Long, eventID:Long) = Action { implicit request =>
     val sector=Sector.getByID(sectorID)
     sector match{
@@ -60,28 +53,5 @@ object Sales extends Controller {
   	    Ok(views.html.sales.details(sale,event))
   	  }
   	}
-  }
-  def checkSeat=Action{implicit request=>
-    seatCheckForm.bindFromRequest.fold(
-      formWithErrors=>Ok(views.html.seats.seatcheck(formWithErrors)),
-      seatParams=>{
-        val event=Event.getById(seatParams._1)
-        event match{
-          case None=>NotFound
-          case Some(event)=>{
-            val sector=Sector.findByNameFromEvent(event, seatParams._2).get
-            val seats=Sector.seats(sector)
-            val result=
-              seats.find(seat=> seat.rowNumber==seatParams._3
-                && seat.num==seatParams._4) match{
-              case None=>("info"->"Free Seat!")
-              case Some(seat)=>("warning"->Seat.sale(seat).id.toString)
-            }
-            Ok(views.html.seats.seatcheck(seatCheckForm)).flashing(result)
-          }
-        }
-      }
-    )
-    
   }
 }
