@@ -47,6 +47,7 @@ object Sector {
       sectorsTable.insert(sectors)
     }
   }
+  def event(sector:Sector)=inTransaction(sector.event.single)
   def updatePrices(eventID: Long, newPrices: Map[String, Int]) = inTransaction {
     sectorsTable.update {
       val event = Event.getById(eventID).get
@@ -85,4 +86,5 @@ object Seat {
   def sector(seat:Seat)=inTransaction{
     seat.sector.single
   }
+  def sale(seat:Seat)=inTransaction(Sector.event(Seat.sector(seat)))
 }

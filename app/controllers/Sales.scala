@@ -63,22 +63,23 @@ object Sales extends Controller {
   }
   def checkSeat=Action{implicit request=>
     seatCheckForm.bindFromRequest.fold(
-      formWithErrors=>NotImplemented,
+      formWithErrors=>Ok(views.html.seats.seatcheck(formWithErrors)),
       seatParams=>{
         val event=Event.getById(seatParams._1)
         event match{
-          case None=>NotImplemented
+          case None=>NotFound
           case Some(event)=>{
             val sector=Sector.findByNameFromEvent(event, seatParams._2).get
             val seats=Sector.seats(sector)
-            seats.find(seat=> seat.rowNumber==seatParams._3
+            val result=
+              seats.find(seat=> seat.rowNumber==seatParams._3
                 && seat.num==seatParams._4) match{
-              case None=>null
-              case Some(seat)=>null
+              case None=>("info"->"Free Seat!")
+              case Some(seat)=>("warning"->Seat.sale(seat).id.toString)
             }
+            Ok(views.html.seats.seatcheck(seatCheckForm)).flashing(result)
           }
         }
-        NotImplemented
       }
     )
     
