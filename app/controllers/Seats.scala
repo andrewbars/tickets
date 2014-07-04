@@ -50,7 +50,11 @@ object Seats extends Controller {
       "row" -> number,
       "num" -> number)((event, sector, row, num) => (event, sector, row, num))(tup => Some(tup)))
 
-  def checkSeat = Action { implicit request =>
+  def checkSeat = Action{implicit request=>
+    Ok(views.html.seats.seatcheck(seatCheckForm))
+  }
+      
+  def checkSeatProc = Action { implicit request =>
     seatCheckForm.bindFromRequest.fold(
       formWithErrors => Ok(views.html.seats.seatcheck(formWithErrors)),
       seatParams => {
@@ -61,9 +65,9 @@ object Seats extends Controller {
           seats.find(seat => seat.rowNumber == seatParams._3
             && seat.num == seatParams._4) match {
             case None => ("info" -> "Free Seat!")
-            case Some(seat) => ("warning" -> Seat.sale(seat).id.toString)
+            case Some(seat) => ("error" -> "Место продано!")
           }
-        Ok(views.html.seats.seatcheck(seatCheckForm)).flashing(result)
+        Redirect(routes.Seats.checkSeat).flashing(result)
       })
   }
 }

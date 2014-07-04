@@ -21,11 +21,12 @@ POST	/events/edit				controllers.Events.update
 #Редактирование цен билетов для события
 GET		/events/:id/edit/prices		controllers.Seats.setPrices(id: Long)
 POST	/events/:id/edit/prices		controllers.Seats.savePrices(id: Long)
-
+#Новая продажа
 GET		/events/:eventID/:sectorID/sale	controllers.Sales.newSale(sectorID:Long, eventID:Long)
 POST	/events/:eventID/:sectorID/sale	controllers.Sales.saveSale(sectorID:Long, eventID:Long)
-
 GET		/sales/:saleID					controllers.Sales.show(saleID: Long)
 
-
+#Проверка доступности конкретного места
+GET 	/checkseat						controllers.Seats.checkSeat
+POST	/checkseat						controllers.Seats.checkSeatProc	
 	

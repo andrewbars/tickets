@@ -11,6 +11,7 @@ name = Название
 date = Дата
 time = Время
 dscr = Описание
+tickets=Билеты
 
 events.edit = Редактирование события
 events.active = Текущие события
@@ -23,5 +24,7 @@ events.form.entername = Введите имя события (не более 10
 events.form.enterdscr = Введите имя события (не более 500 символов)
 
 prices.set.name = Редактирование цен билетов
+
+seat.check = Проверить доступность места
 
 tickets.order = Заказ билетов
