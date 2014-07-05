@@ -30,7 +30,7 @@ object Sale {
     val seatstoInsert = (for {
       row <- sitsMap.zipWithIndex
       num <- row._1
-    } yield Seat(0, sectorID, row._2 + 1, num, true, Some(sale.id)))
+    } yield Seat(0, sectorID, row._2 + 1, num, true,false, Some(sale.id),None))
     Seat.insert(seatstoInsert)
   }
 

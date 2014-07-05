@@ -30,12 +30,16 @@ case class Seat(
   val rowNumber: Int,
   val num: Int,
   val sold: Boolean,
-  val saleID: Option[Long]) extends KeyedEntity[Long] {
-  def this() = this(0, 0, 0, 0, false, Some(0))
+  val booked: Boolean,
+  val saleID: Option[Long],
+  val bookingID: Option[Long]) extends KeyedEntity[Long] {
+  def this() = this(0, 0, 0, 0, false, false, Some(0), Some(0))
   lazy val sector: ManyToOne[Sector] =
     Database.sectorsToSeats.right(Seat.this)
   lazy val sell: ManyToOne[Sale] =
     salesToSeats.right(this)
+  lazy val booking: ManyToOne[Booking] =
+    bookingsToSeats.right(this)
   def sell(sID: Long) = this.copy(saleID = Some(sID))
 }
 
@@ -87,4 +91,5 @@ object Seat {
     seat.sector.single
   }
   def sale(seat: Seat) = inTransaction(Sector.event(Seat.sector(seat)))
+  def booking(seat: Seat) = inTransaction(seat.booking.single)
 }

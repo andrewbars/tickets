@@ -17,6 +17,8 @@ case class Event(
     Database.eventsToSectors.left(this)
   lazy val sells: OneToMany[Sale] =
     Database.eventsToSells.left(this)
+  lazy val bookings: OneToMany[Booking] =
+    Database.eventsToBookings.left(this)
 }
 
 object Event {
@@ -49,4 +51,5 @@ object Event {
     case None => None
     case Some(event) => inTransaction(Some(event.sectors.toList))
   }
+  def bookings(event: Event) = inTransaction(event.bookings.toList)
 }
