@@ -19,7 +19,17 @@
 				}
 			</dl>
 			@if(booking.confirmed){
-				<p><a class="btn btn-primary btn-lg active" role="button" href="@routes.Events.show(event.id)">Вернуться к событию</a></p>
+				<p>
+					<a class="btn btn-primary btn-lg active" role="button" href="@routes.Events.show(event.id)">
+						Вернуться к событию
+					</a>
+					<a class="btn btn-success btn-lg active" role="button" href="@routes.Bookings.redeemBooking(booking.id)">
+						Выкупить бронь
+					</a>	
+					<a class="btn btn-danger btn-lg active" role="button" href="@routes.Bookings.revertBooking(booking.id)">
+						Отменить бронь
+					</a>				
+				</p>
 			}else{
 				<p>
 					<a class="btn btn-success btn-lg active" role="button" href="@routes.Bookings.confirmBooking(booking.id)">

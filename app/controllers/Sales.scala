@@ -16,7 +16,7 @@ import com.mysql.jdbc.NotImplemented
 
 object Sales extends Controller {
 
-  val saleForm=Form(seatCheckboxMapping)
+  val saleForm = Form(seatCheckboxMapping)
 
   def newSale(sectorID: Long, eventID: Long) = Action { implicit request =>
     val sector = Sector.getByID(sectorID)

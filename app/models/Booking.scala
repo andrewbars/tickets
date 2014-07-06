@@ -2,7 +2,7 @@ package models
 
 import org.squeryl.KeyedEntity
 import java.sql.Timestamp
-import java.util.Date
+import java.util.{ Date, Calendar }
 import org.squeryl.PrimitiveTypeMode._
 import org.squeryl.Table
 import org.squeryl.Query
@@ -44,7 +44,13 @@ object Booking {
     sitsTable.delete(booking.seats)
     bookingsTable.deleteWhere(_.id === booking.id)
   }
-  def event(booking:Booking) = inTransaction(booking.event.single)
-  def bookingsByNameQ(name:String)=bookingsTable.where(booking=>booking.clientName like name)
-  def findByClientName(searchVal:String)=inTransaction(bookingsByNameQ(searchVal).toList)
+  def event(booking: Booking) = inTransaction(booking.event.single)
+  def bookingsByNameQ(name: String) = bookingsTable.where(booking => booking.clientName like name)
+  def findByClientName(searchVal: String) = inTransaction(bookingsByNameQ(searchVal).toList)
+  def redeemBooking(booking: Booking, sale: Sale) = inTransaction {
+    salesTable.insert(sale)
+    val seatsToUpdate = seats(booking) map (seat => seat.copy(sold = true, booked = false, bookingID = None, saleID = Some(sale.id)))
+    sitsTable.update(seatsToUpdate)
+    bookingsTable.deleteWhere(_.id === booking.id)
+  }
 }

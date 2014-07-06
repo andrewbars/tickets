@@ -52,6 +52,18 @@ object Bookings extends Controller {
     Booking.revertBooking(booking)
     Redirect(routes.Events.show(booking.eventID)).flashing("info" -> "Бронирование отменено!")
   }
+
+  def redeemBooking(bookingID: Long) = Action { implicit request =>
+    val booking = Booking.getById(bookingID).get
+    val sale = Sale(0,
+      Booking.event(booking).id,
+      new Timestamp(Calendar.getInstance().getTimeInMillis()),
+      booking.price,
+      true)
+    Booking.redeemBooking(booking, sale)
+    Redirect(routes.Sales.show(sale.id)).flashing("success" -> "Выкуп продажи успешно подтвержден!")
+  }
+
   def show(bookingID: Long) = Action { implicit request =>
     Booking.getById(bookingID) match {
       case None => Redirect(routes.Events.list()).flashing("error" -> "Бронирование с таким ID не найдена")
