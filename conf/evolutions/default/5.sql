@@ -4,6 +4,7 @@ CREATE TABLE bookings(
 id BIGINT AUTO_INCREMENT,
 eventID BIGINT,
 date DATETIME,
+clientName VARCHAR(30) CHARACTER SET utf8,
 expDate DATETIME,
 price INTEGER,
 confirmed BOOLEAN,

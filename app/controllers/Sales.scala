@@ -16,19 +16,20 @@ import com.mysql.jdbc.NotImplemented
 
 object Sales extends Controller {
 
+  val saleForm=Form(seatCheckboxMapping)
 
   def newSale(sectorID: Long, eventID: Long) = Action { implicit request =>
     val sector = Sector.getByID(sectorID)
     sector match {
       case None => Redirect(routes.Events.show(eventID)).flashing("error" -> "Задан неверный номер сектора")
       case Some(sec) =>
-        Ok(views.html.sales.sale(sec, eventID, Sector.orderedSeatsInSector(sec))(seatCheckboxFrom))
+        Ok(views.html.sales.sale(sec, eventID, Sector.orderedSeatsInSector(sec))(saleForm))
     }
   }
 
   def saveSale(sectorID: Long, eventID: Long) = Action { implicit request =>
     val sec = Sector.getByID(sectorID).get
-    seatCheckboxFrom.bindFromRequest.fold(
+    saleForm.bindFromRequest.fold(
       formWithErrors =>
         {
           Ok(views.html.sales.sale(sec, eventID, Sector.orderedSeatsInSector(sec))(formWithErrors))

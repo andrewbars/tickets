@@ -50,11 +50,9 @@ object Seats extends Controller {
       "row" -> number,
       "num" -> number)((event, sector, row, num) => (event, sector, row, num))(tup => Some(tup)))
 
-  val seatCheckboxFrom = Form {
-    mapping(
-      "rows" -> list(rowMap))(rows => rows)(rows => Some(rows))
-  }
-  
+  val seatCheckboxMapping = mapping(
+    "rows" -> list(rowMap))(rows => rows)(rows => Some(rows))
+
   def checkSeat = Action { implicit request =>
     Ok(views.html.seats.seatcheck(seatCheckForm))
   }

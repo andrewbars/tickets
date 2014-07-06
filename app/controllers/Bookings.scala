@@ -16,6 +16,11 @@ import com.mysql.jdbc.NotImplemented
 
 object Bookings extends Controller {
 
+  val bookingForm=Form(mapping(
+	"expDate"->dateTimeMapping,
+	"clientName"->nonEmptyText,
+	"seats"->seatCheckboxMapping
+  )((expDate,clientName, seats)=>(expDate,clientName, seats))(book=>Some(book)))
   def newBooking(sectorID: Long, eventID: Long) = Action { implicit request =>
     val sector = Sector.getByID(sectorID)
     sector match {
@@ -28,17 +33,15 @@ object Bookings extends Controller {
   
   def saveBooking(sectorID: Long, eventID: Long) = Action { implicit request =>
     val sec = Sector.getByID(sectorID).get
-    val eventTime=Event.getById(eventID).get.date.getTime()
-    val bookExpTime=new Timestamp(eventTime-15*60*1000)
-    seatCheckboxFrom.bindFromRequest.fold(
+    bookingForm.bindFromRequest.fold(
       formWithErrors =>
         {
           //TODO Replace with actual booking view
           NotImplemented
         },
       sectorMap => {
-        val booking = Booking(0, eventID, new Timestamp(new Date().getTime()), bookExpTime, sec.sitPrice, false)
-        Booking.addNew(sectorMap, sectorID, booking)
+        val booking = Booking(0, eventID, new Timestamp(new Date().getTime()), sectorMap._2, sectorMap._1, sec.sitPrice, false)
+        Booking.addNew(sectorMap._3, sectorID, booking)
         //TODO Replace with actual booking view
         NotImplemented
       })

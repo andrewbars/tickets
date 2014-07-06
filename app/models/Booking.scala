@@ -14,6 +14,7 @@ case class Booking(
   id: Long,
   eventID: Long,
   date: Timestamp,
+  clientName:String,
   expDate: Timestamp,
   price: Int,
   confirmed: Boolean) extends KeyedEntity[Long] {
