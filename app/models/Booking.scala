@@ -22,3 +22,16 @@ case class Booking(
   lazy val event: ManyToOne[Event] =
     eventsToBookings.right(this)
 }
+
+object Booking {
+  def addNew(sitsMap: List[List[Int]], sectorID: Long, booking: Booking) = inTransaction {
+    val sector = Sector.getByID(sectorID).get
+    val event = sector.event.single
+    bookingsTable.insert(booking)
+    val seatstoInsert = (for {
+      row <- sitsMap.zipWithIndex
+      num <- row._1
+    } yield Seat(0, sectorID, row._2 + 1, num, false, true, None, Some(booking.id)))
+    Seat.insert(seatstoInsert)
+  }
+}

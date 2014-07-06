@@ -28,6 +28,10 @@ GET		/sales/:saleID					controllers.Sales.show(saleID: Long)
 GET		/sales/:saleID/confirm			controllers.Sales.confirmSale(saleID: Long)
 GET		/sales/:saleID/revert			controllers.Sales.revertSale(saleID: Long)
 
+#Бронирование
+GET 	/events/:eventID/:sectorID/book	controllers.Bookings.newBooking(sectorID: Long, eventID: Long)
+POST	/events/:eventID/:sectorID/book	controllers.Bookings.saveBooking(sectorID: Long, eventID: Long)
+
 #Проверка доступности конкретного места
 GET 	/checkseat						controllers.Seats.checkSeat
 POST	/checkseat						controllers.Seats.checkSeatProc	
