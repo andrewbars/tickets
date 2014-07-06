@@ -1,0 +1,36 @@
+@* details Template File *@
+@(booking:Booking, event:Event)(implicit flash:Flash)
+
+@main("Бронь № "+booking.id){
+	<div class="container">
+		<div class="jumbotron">
+			<h1>@("Детали бронирования № " + booking.id)</h1>
+			<h2>@("Событие: "+event.tp+" "+event.name)</h2>
+			<h3>@("Дата события:" + Dates.dateTimeFormat.format(event.date))</h3>
+			<p>На имя: @booking.clientName</p>
+			<p>Бронь произведена: @Dates.dateTimeFormat.format(booking.date)</p>
+			<p>Действительна до: @Dates.dateTimeFormat.format(booking.expDate)</p>
+			<h3>@("Сектор: " + Seat.sector(Booking.seats(booking).head).name)</h3>
+			<h3>@("Цена билета: " + booking.price+" грн.")</h3>
+			<dl class="dl-horizontal">
+				<dt>Бронируемые места:</dt>
+				@for(seat<-Booking.seats(booking)){
+					<dd>@("Ряд: "+seat.rowNumber+", место: "+ seat.num)</dd>
+				}
+			</dl>
+			@if(booking.confirmed){
+				<p><a class="btn btn-primary btn-lg active" role="button" href="@routes.Events.show(event.id)">Вернуться к событию</a></p>
+			}else{
+				<p>
+					<a class="btn btn-success btn-lg active" role="button" href="@routes.Bookings.confirmBooking(booking.id)">
+					Подтвердить
+					</a>
+					<a class="btn btn-danger btn-lg active" role="button" href="@routes.Bookings.revertBooking(booking.id)">
+					Отмена
+					</a>					
+				</p>
+			}	
+				
+		</div>
+	</div>
+}

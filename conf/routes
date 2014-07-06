@@ -31,6 +31,9 @@ GET		/sales/:saleID/revert			controllers.Sales.revertSale(saleID: Long)
 #Бронирование
 GET 	/events/:eventID/:sectorID/book	controllers.Bookings.newBooking(sectorID: Long, eventID: Long)
 POST	/events/:eventID/:sectorID/book	controllers.Bookings.saveBooking(sectorID: Long, eventID: Long)
+GET		/bookings/:bookingID			controllers.Bookings.show(bookingID: Long)
+GET		/bookings/:bookingID/confirm	controllers.Bookings.confirmBooking(bookingID: Long)
+GET		/bookings/:bookingID/revert		controllers.Bookings.revertBooking(bookingID: Long)
 
 #Проверка доступности конкретного места
 GET 	/checkseat						controllers.Seats.checkSeat

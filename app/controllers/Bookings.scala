@@ -26,8 +26,7 @@ object Bookings extends Controller {
     sector match {
       case None => Redirect(routes.Events.show(eventID)).flashing("error" -> "Задан неверный номер сектора")
       case Some(sec) =>
-        //TODO Replace with actual booking view
-        NotImplemented
+        Ok(views.html.bookings.booking(sec, eventID,Sector.orderedSeatsInSector(sec))(bookingForm))
     }
   }
   
@@ -36,14 +35,31 @@ object Bookings extends Controller {
     bookingForm.bindFromRequest.fold(
       formWithErrors =>
         {
-          //TODO Replace with actual booking view
-          NotImplemented
+          Ok(views.html.bookings.booking(sec, eventID,Sector.orderedSeatsInSector(sec))(formWithErrors))
         },
       sectorMap => {
         val booking = Booking(0, eventID, new Timestamp(new Date().getTime()), sectorMap._2, sectorMap._1, sec.sitPrice, false)
         Booking.addNew(sectorMap._3, sectorID, booking)
-        //TODO Replace with actual booking view
-        NotImplemented
+        Redirect(routes.Bookings.show(booking.id)).flashing("info" -> "Проверьте и подтвердите бронирование")
       })
+  }
+  def confirmBooking(bookingID:Long)=Action{implicit request=>
+    val booking =Booking.getById(bookingID).get
+    Booking.confirmBooking(booking)
+    Redirect(routes.Events.show(booking.eventID)).flashing("success" -> "Бронирование подтверждено!")
+  }
+  def revertBooking(bookingID:Long)=Action{implicit request=>
+  	val booking =Booking.getById(bookingID).get
+    Booking.revertBooking(booking)
+    Redirect(routes.Events.show(booking.eventID)).flashing("info" -> "Бронирование отменено!")
+  }
+  def show(bookingID:Long)=Action{implicit request=>
+  	Booking.getById(bookingID) match{
+  	  case None=> Redirect(routes.Events.list()).flashing("error" -> "Бронирование с таким ID не найдена")
+  	  case Some(booking)=>{
+  	    val event=Booking.event(booking)
+  	    Ok(views.html.bookings.details(booking,event))
+  	  }
+  	}
   }
 }

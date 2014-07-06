@@ -49,5 +49,10 @@ object Sale {
   }
   def deleteByEventID(eventID: Long) = inTransaction(salesTable.deleteWhere(_.eventID === eventID))
   def confirmSale(sale: Sale) = inTransaction(salesTable.update(sale.copy(confirmed = true)))
-  def revertSale(sale: Sale) = inTransaction(if (!sale.confirmed) salesTable.deleteWhere(_.id === sale.id))
+  def revertSale(sale: Sale) = inTransaction{
+    if (!sale.confirmed) {
+      sitsTable.delete(sale.sits)
+      salesTable.deleteWhere(_.id === sale.id)
+    }
+  }
 }
