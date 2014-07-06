@@ -11,7 +11,10 @@
 				@for(seat<-1 to sector.seatsInRow) {
 					<td 
 					class= "@if(orderedSeats
-						exists(s=>s.rowNumber==row&&s.num==seat)){danger}else{info}">@seat</td>
+						exists(s=>s.rowNumber==row&&s.num==seat&&s.sold)){danger}else{
+						@if(orderedSeats
+						exists(s=>s.rowNumber==row&&s.num==seat&&s.booked)){warning}else{info}
+						}">@seat</td>
 				}
 			</tr>	
 		}

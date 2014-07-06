@@ -25,7 +25,9 @@
 				@for(seat<-1 to sector.seatsInRow) {
 					<td 
 					class= "@if(orderedSeats
-						exists(s=>s.rowNumber==row&&s.num==seat)){danger}else{info}">
+						exists(s=>s.rowNumber==row&&s.num==seat&&s.sold)){danger}else{
+						@if(orderedSeats
+						exists(s=>s.rowNumber==row&&s.num==seat&&s.booked)){warning}else{info}}">
 					@helper.input(bookingForm("seats.rows"+"["+row+"].checkedSeats["+seat+"]"), '_class ->"checkbox-inline",'_label->seat){ (id, name, value, args) =>
    						<input type="checkbox" id="@id" name="@name"  @toHtmlArgs(args) value="true" class="checkbox-inline"
    						@if(orderedSeats

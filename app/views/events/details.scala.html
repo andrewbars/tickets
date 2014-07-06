@@ -30,7 +30,10 @@
 				</li>
 				@if(sector.isDefined){
 					@seats.sectorMap(sector.get,Sector.orderedSeatsInSector(sector.get))
-					<p><a class="btn btn-primary btn-lg active" role="button" href="@routes.Sales.newSale(sector.get.id, event.id)">@Messages("tickets.order")</a>
+					<p>
+					<a class="btn btn-primary btn-lg active" role="button" href="@routes.Sales.newSale(sector.get.id, event.id)">@Messages("tickets.order")</a>
+					<a class="btn btn-primary btn-lg active" role="button" href="@routes.Bookings.newBooking(sector.get.id, event.id)">Забронировать билеты</a>
+					</p>
 				}else{
 					<img src="@routes.Assets.at("images/field.jpg")" class="img-responsive"/>
 				}
