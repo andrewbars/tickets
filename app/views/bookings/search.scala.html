@@ -1,0 +1,10 @@
+@* search Template File *@
+@(searchForm: Form[String])(implicit flash:Flash)
+
+@import views.helpers.bootstrap._
+
+@main("Поиск брони"){
+	@views.html.bookings.searchform(searchForm)
+}
+
+

@@ -1,0 +1,18 @@
+@* list Template File *@
+@(bookings:List[Booking], searchForm:Form[String])(implicit flash:Flash)
+
+@main("Результаты поиска"){
+	@views.html.bookings.searchform(searchForm)
+	<div class="container">
+		<div class="list-group">
+			@for(booking<-bookings){
+				<h4 class="list-group-item-heading"><a href=@routes.Bookings.show(booking.id) class="list-group-item"> 
+					@("Бронирование №"+booking.id)</a></h4>
+	    		<p class="list-group-item-text">
+		    		<p>@("Событие: "+Booking.event(booking).name)</p>
+					<p>На имя: @booking.clientName</p>
+	    		</p>
+			}
+		</div>
+	</div>
+}

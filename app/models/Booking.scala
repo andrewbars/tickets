@@ -45,4 +45,6 @@ object Booking {
     bookingsTable.deleteWhere(_.id === booking.id)
   }
   def event(booking:Booking) = inTransaction(booking.event.single)
+  def bookingsByNameQ(name:String)=bookingsTable.where(booking=>booking.clientName like name)
+  def findByClientName(searchVal:String)=inTransaction(bookingsByNameQ(searchVal).toList)
 }

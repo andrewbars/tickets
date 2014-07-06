@@ -22,11 +22,16 @@ POST	/events/edit				controllers.Events.update
 GET		/events/:id/edit/prices		controllers.Seats.setPrices(id: Long)
 POST	/events/:id/edit/prices		controllers.Seats.savePrices(id: Long)
 #Новая продажа
+#TODO поменять пути на вида /events/:id/sectors/:id
 GET		/events/:eventID/:sectorID/sale	controllers.Sales.newSale(sectorID:Long, eventID:Long)
 POST	/events/:eventID/:sectorID/sale	controllers.Sales.saveSale(sectorID:Long, eventID:Long)
 GET		/sales/:saleID					controllers.Sales.show(saleID: Long)
 GET		/sales/:saleID/confirm			controllers.Sales.confirmSale(saleID: Long)
 GET		/sales/:saleID/revert			controllers.Sales.revertSale(saleID: Long)
+
+#Поиск брони
+GET		/bookings/search				controllers.Bookings.find
+POST	/bookings/search				controllers.Bookings.findProc
 
 #Бронирование
 GET 	/events/:eventID/:sectorID/book	controllers.Bookings.newBooking(sectorID: Long, eventID: Long)
@@ -34,6 +39,8 @@ POST	/events/:eventID/:sectorID/book	controllers.Bookings.saveBooking(sectorID: 
 GET		/bookings/:bookingID			controllers.Bookings.show(bookingID: Long)
 GET		/bookings/:bookingID/confirm	controllers.Bookings.confirmBooking(bookingID: Long)
 GET		/bookings/:bookingID/revert		controllers.Bookings.revertBooking(bookingID: Long)
+
+
 
 #Проверка доступности конкретного места
 GET 	/checkseat						controllers.Seats.checkSeat

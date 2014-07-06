@@ -1,0 +1,13 @@
+@* searchform Template File *@
+@(searchForm: Form[String])
+
+	<div class="container">
+		@helper.form(action= routes.Bookings.findProc, 'role->"form", 'class->"form-horizontal"){
+			<div class="input-group">
+				<input type="search" class="form-control" name="valToSearch" id="valToSearch">
+				<span class="input-group-btn">
+					<button class="btn btn-default" type="submit">Поиск</button>
+				</span>
+			</div>
+		}
+	</div>
