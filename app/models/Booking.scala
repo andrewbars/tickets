@@ -53,4 +53,14 @@ object Booking {
     sitsTable.update(seatsToUpdate)
     bookingsTable.deleteWhere(_.id === booking.id)
   }
+
+  def expire = inTransaction {
+    val bookings = bookingsTable.where(booking =>
+      booking.date < new Timestamp(Calendar.getInstance().getTimeInMillis()))
+    val seats = from(sitsTable, bookings)((seat, booking) =>
+      where(seat.bookingID === booking.id)
+        select (seat))
+    sitsTable.delete(seats)
+    bookingsTable.delete(bookings)
+  }
 }
