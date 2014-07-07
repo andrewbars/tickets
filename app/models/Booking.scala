@@ -55,12 +55,17 @@ object Booking {
   }
 
   def expire = inTransaction {
-    val bookings = bookingsTable.where(booking =>
-      booking.date < new Timestamp(Calendar.getInstance().getTimeInMillis()))
-    val seats = from(sitsTable, bookings)((seat, booking) =>
-      where(seat.bookingID === booking.id)
-        select (seat))
+   val bookings = bookingsTable.where(booking =>
+      booking.expDate < new Timestamp(Calendar.getInstance().getTimeInMillis()))
+/*  TODO Why this thing doesn`t wokk?!!!!
+    val seats =from(bookingsTable,sitsTable)((booking, seat)=>
+    	where(booking.expDate < new Timestamp(Calendar.getInstance().getTimeInMillis()) and seat.bookingID===booking.id)
+    	select(seat)
+    )
+    
     sitsTable.delete(seats)
+    * */
+    for(booking<-bookings)(booking.seats.deleteAll)
     bookingsTable.delete(bookings)
   }
 }
