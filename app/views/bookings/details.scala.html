@@ -15,7 +15,10 @@
 			<dl class="dl-horizontal">
 				<dt>Бронируемые места:</dt>
 				@for(seat<-Booking.seats(booking)){
-					<dd>@("Ряд: "+seat.rowNumber+", место: "+ seat.num)</dd>
+					<dd>
+					@("Ряд: "+seat.rowNumber+", место: "+ seat.num)
+					<a href = "@routes.Bookings.excludeOne(seat.id, booking.id)">Исключить</a>
+					</dd>
 				}
 			</dl>
 			@if(booking.confirmed){

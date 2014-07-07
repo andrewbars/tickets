@@ -101,4 +101,14 @@ object Bookings extends Controller {
         }
       })
   }
+  def excludeOne(seatID: Long, bookingID: Long) = Action { implicit request =>
+    Seat.deleteOne(seatID)
+    val booking = Booking.getById(bookingID).get
+    if (Booking.seats(booking).isEmpty) {
+      Booking.revertBooking(booking)
+      Redirect(routes.Events.list(false)).flashing("success" -> "Бронирование отменено")
+    } else {
+      Redirect(routes.Bookings.show(bookingID)).flashing("success" -> "Выбранное место исключено")
+    }
+  }
 }

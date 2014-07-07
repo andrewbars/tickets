@@ -40,6 +40,7 @@ GET		/bookings/:bookingID			controllers.Bookings.show(bookingID: Long)
 GET		/bookings/:bookingID/confirm	controllers.Bookings.confirmBooking(bookingID: Long)
 GET		/bookings/:bookingID/revert		controllers.Bookings.revertBooking(bookingID: Long)
 GET		/bookings/:bookingID/redeem		controllers.Bookings.redeemBooking(bookingID: Long)
+GET		/bookings/:bookingID/exclude/:seatID	controllers.Bookings.excludeOne(seatID: Long, bookingID: Long)		
 
 
 

@@ -80,6 +80,7 @@ object Sector {
 object Seat {
   def insert(sits: Iterable[Seat]) = inTransaction(Database.sitsTable.insert(sits))
   def update(sits: List[Seat]) = inTransaction(Database.sitsTable.update(sits))
+  def deleteOne(seatID:Long) = inTransaction(sitsTable.deleteWhere(_.id===seatID))
   def seatsByEventIdQ(id: Long) = from(sitsTable, sectorsTable) { (seat, sector) =>
     where(sector.eventID === id and seat.sectorID === sector.id)
     select(seat)
