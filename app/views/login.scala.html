@@ -3,13 +3,13 @@
 
 @main("Вход в систему"){
   <div class="container">
-      <form class="form-signin" role="form">
+  @helper.form(action= routes.Application.authenticate, 'role->"form", 'class->"form-signin"){
         <h2 class="form-signin-heading">Введите Логин и Пароль для доступа</h2>
-        <input type="text" class="form-control" placeholder="Login" required autofocus>
-        <input type="password" class="form-control" placeholder="Password" required>
+        <input type="text" id="login" name="login" class="form-control" placeholder="Login" required autofocus>
+        <input type="password" id="password" name="password" class="form-control" placeholder="Password" required>
         <button class="btn btn-lg btn-primary btn-block" type="submit">Войти</button>
-      </form>
-    </div>
-    
+    }
+   </div>
     <link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/signin.css")">
+    
 }

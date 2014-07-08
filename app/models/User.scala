@@ -30,6 +30,11 @@ case class User(
 }
 
 object User {
+  
+  def allQ = from(usersTable)(user=>select(user) orderBy (user.name asc))
+  
+  def getAll = inTransaction(allQ.toList)
+  
   def addNew(user: User) = inTransaction {
     usersTable.insert(
       user copy (password = Crypto.encryptAES(user.password)))
@@ -55,5 +60,4 @@ object User {
           None
     }
   }
-
 }

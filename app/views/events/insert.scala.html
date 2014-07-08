@@ -8,7 +8,7 @@
 		@helper.input(ev("id"), '_class ->"form-group",'_label->"ID"){ (id, name, value, args) =>
 	    <input type="text" value="0" name="@name" id="@id" @toHtmlArgs(args) class="form-control" readonly>
 	}
-		@eventForm(ev)
+		@views.html.events.eventForm(ev)
 			<button type="submit" class="bth btn-primary btn-lg">Сохранить</button>
 		}
 	</div>

@@ -1,0 +1,13 @@
+@* list Template File *@
+@(users: List[User])(implicit flash:Flash)
+
+@main("Список пользователей"){
+	<div class="container">
+		<div class="list-group">
+			@for(user<-users){
+				<h4 class="list-group-item-heading"><a href=@routes.Users.show(user.id:Long) class="list-group-item"> 
+					@(user.name)</a></h4>
+			}
+		</div>
+	</div>
+}
