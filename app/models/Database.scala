@@ -16,6 +16,8 @@ object Database extends Schema {
   on (salesTable)(s=>declare(s.id is (autoIncremented)))
   val bookingsTable = table[Booking]("bookings")
   on(bookingsTable)(b=>declare(b.id is(autoIncremented)))
+  val usersTable = table[User]("users")
+  on (usersTable)(u=>declare(u.id is(autoIncremented)))
   
   val eventsToSectors = oneToManyRelation(eventsTable, sectorsTable).via(((e,s)=>e.id===s.eventID))
   val sectorsToSeats = oneToManyRelation(sectorsTable, sitsTable).via((sec,sit)=>sec.id===sit.sectorID)
