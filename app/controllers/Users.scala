@@ -7,8 +7,10 @@ import play.api.i18n._
 import play.api.data.Forms._
 import play.api.data.validation.Constraints._
 import models.User
+import jp.t2v.lab.play2.auth.AuthElement
+import models.Permission
 
-object Users extends Controller {
+object Users extends Controller with AuthElement with AuthConfigImpl {
   /*TODO Доработать подтверждение пароля
   val passMap = mapping(
 	"pass"->nonEmptyText,
@@ -28,11 +30,11 @@ object Users extends Controller {
       "edU" -> boolean)(User.apply)(User.unapply)
   }
 
-  def newUser = Action { implicit request =>
+  def newUser = StackAction(AuthorityKey->Permission.editUsers) { implicit request =>
     Ok(views.html.users.addNew(userForm))
   }
 
-  def saveUser = Action { implicit request =>
+  def saveUser = StackAction(AuthorityKey->Permission.editUsers) { implicit request =>
     userForm.bindFromRequest.fold(
       formWithErrors => Ok(views.html.users.addNew(formWithErrors)),
       user => {
@@ -41,12 +43,12 @@ object Users extends Controller {
       })
   }
 
-  def list = Action { implicit request =>
+  def list = StackAction(AuthorityKey->Permission.editUsers) { implicit request =>
     val users = User.getAll
     Ok(views.html.users.list(users))
   }
 
-  def show (userID:Long) = Action { implicit request =>
+  def show (userID:Long) = StackAction(AuthorityKey->Permission.editUsers) { implicit request =>
     User.findByID(userID) match{
       case None=>Redirect(routes.Users.list).flashing("error"->"Пользователь с таким ID не найден")
       case Some(user)=>Ok(views.html.users.details(user))

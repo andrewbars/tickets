@@ -13,8 +13,10 @@ import play.api.data.validation.Constraints._
 import Dates._
 import Seats._
 import com.mysql.jdbc.NotImplemented
+import jp.t2v.lab.play2.auth.AuthElement
+import models.Permission
 
-object Bookings extends Controller {
+object Bookings extends Controller with AuthElement with AuthConfigImpl {
 
   val bookingForm = Form(mapping(
     "expDate" -> dateTimeMapping,
@@ -29,7 +31,7 @@ object Bookings extends Controller {
     }
   }
 
-  def saveBooking(sectorID: Long, eventID: Long) = Action { implicit request =>
+  def saveBooking(sectorID: Long, eventID: Long) = StackAction(AuthorityKey->Permission.default) { implicit request =>
     val sec = Sector.getByID(sectorID).get
     bookingForm.bindFromRequest.fold(
       formWithErrors =>
@@ -42,12 +44,12 @@ object Bookings extends Controller {
         Redirect(routes.Bookings.show(booking.id)).flashing("info" -> "Проверьте и подтвердите бронирование")
       })
   }
-  def confirmBooking(bookingID: Long) = Action { implicit request =>
+  def confirmBooking(bookingID: Long) = StackAction(AuthorityKey->Permission.default) { implicit request =>
     val booking = Booking.getById(bookingID).get
     Booking.confirmBooking(booking)
     Redirect(routes.Events.show(booking.eventID)).flashing("success" -> "Бронирование подтверждено!")
   }
-  def revertBooking(bookingID: Long) = Action { implicit request =>
+  def revertBooking(bookingID: Long) = StackAction(AuthorityKey->Permission.default) { implicit request =>
     val booking = Booking.getById(bookingID).get
     Booking.revertBooking(booking)
     Redirect(routes.Events.show(booking.eventID)).flashing("info" -> "Бронирование отменено!")
@@ -64,7 +66,7 @@ object Bookings extends Controller {
     Redirect(routes.Sales.show(sale.id)).flashing("success" -> "Выкуп продажи успешно подтвержден!")
   }
 
-  def show(bookingID: Long) = Action { implicit request =>
+  def show(bookingID: Long) = StackAction(AuthorityKey->Permission.default) { implicit request =>
     Booking.getById(bookingID) match {
       case None => Redirect(routes.Events.list()).flashing("error" -> "Бронирование с таким ID не найдена")
       case Some(booking) => {
@@ -77,11 +79,11 @@ object Bookings extends Controller {
   val searchForm = Form(mapping(
     "valToSearch" -> nonEmptyText)(valToSearch => valToSearch)(valToSearch => Some(valToSearch)))
 
-  def find = Action { implicit request =>
+  def find = StackAction(AuthorityKey->Permission.default) { implicit request =>
     Ok(views.html.bookings.search(searchForm))
   }
 
-  def findProc = Action { implicit request =>
+  def findProc = StackAction(AuthorityKey->Permission.default) { implicit request =>
     searchForm.bindFromRequest.fold(
       formWithErrors => Ok(views.html.bookings.search(formWithErrors)),
       searchVal => {
@@ -101,7 +103,7 @@ object Bookings extends Controller {
         }
       })
   }
-  def excludeOne(seatID: Long, bookingID: Long) = Action { implicit request =>
+  def excludeOne(seatID: Long, bookingID: Long) = StackAction(AuthorityKey->Permission.default) { implicit request =>
     Seat.deleteOne(seatID)
     val booking = Booking.getById(bookingID).get
     if (Booking.seats(booking).isEmpty) {

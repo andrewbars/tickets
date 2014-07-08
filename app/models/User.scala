@@ -11,11 +11,13 @@ import Database._
 
 object Permission {
 
-  def editEvent(user: User) = user.canEditEvents
+  def editEvent = (user: User) => user.canEditEvents
 
-  def editSales(user: User) = user.canEditSales
+  def editSales = (user: User) => user.canEditSales
 
-  def editUsers(user: User) = user.canEditUsers
+  def editUsers = (user: User) => user.canEditUsers
+  
+  def default = (user:User)=>true
 
 }
 

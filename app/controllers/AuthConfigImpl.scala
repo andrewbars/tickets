@@ -13,7 +13,7 @@ trait AuthConfigImpl extends AuthConfig {
 
   type User = models.User
 
-  type Authority = (User => Boolean)
+  type Authority = User => Boolean
 
   val idTag: ClassTag[Id] = ClassTag.Long
 
@@ -29,7 +29,7 @@ trait AuthConfigImpl extends AuthConfig {
 
 
   def authenticationFailed(request: RequestHeader)(implicit ctx: ExecutionContext): Future[SimpleResult] =
-    Future.successful(Redirect(routes.Application.login))
+    Future.successful(Redirect(routes.Application.login).flashing("error"->"У Вас не прав для данного действия!"))
 
 
   def authorizationFailed(request: RequestHeader)(implicit ctx: ExecutionContext): Future[SimpleResult] = 
@@ -38,5 +38,5 @@ trait AuthConfigImpl extends AuthConfig {
   def authorize(user: User, authority: Authority)(implicit ctx: ExecutionContext): Future[Boolean] = Future.successful {
 	  authority(user)
   }
-  override lazy val cookieSecureOption: Boolean = play.api.Play.current.configuration.getBoolean("auth.cookie.secure").getOrElse(true)
+  override lazy val cookieSecureOption: Boolean = play.api.Play.current.configuration.getBoolean("auth.cookie.secure").getOrElse(false)
 }

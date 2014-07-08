@@ -15,7 +15,7 @@ import scala.concurrent.Future
 object Application extends Controller with AuthConfigImpl with LoginLogout {
 
   def index = Action {
-    Redirect(routes.Events.list(false))
+    Redirect(routes.Application.login)
   }
 
   val loginForm = Form {

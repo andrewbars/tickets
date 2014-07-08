@@ -11,8 +11,10 @@ import play.api.i18n._
 import play.api.data.Forms._
 import play.api.data.validation.Constraints._
 import Dates._
+import jp.t2v.lab.play2.auth.AuthElement
+import models.Permission
 
-object Seats extends Controller {
+object Seats extends Controller with AuthElement with AuthConfigImpl {
 
   val rowMap = mapping(
     "checkedSeats" -> list(boolean))(checkedSeats =>
@@ -26,7 +28,7 @@ object Seats extends Controller {
     "prices" -> list(number))((names, prices) => (names zip prices).toMap)(priceMap =>
       Some((for (name <- Sector.sectorNames) yield (name, priceMap(name))).unzip)))
 
-  def setPrices(implicit eventID: Long) = Action { implicit request =>
+  def setPrices(implicit eventID: Long) = StackAction(AuthorityKey->Permission.editEvent) { implicit request =>
     Event.getSectors(eventID) match {
       case None => Redirect(routes.Events.list()).flashing("error" -> (Messages("events.notfound")))
       case Some(sectors) =>
@@ -34,7 +36,7 @@ object Seats extends Controller {
         Ok(views.html.events.prices(sectorPriceForm.fill(sectorPrices)))
     }
   }
-  def savePrices(implicit eventID: Long) = Action { implicit request =>
+  def savePrices(implicit eventID: Long) = StackAction(AuthorityKey->Permission.editEvent) { implicit request =>
     sectorPriceForm.bindFromRequest.fold(
       formWithErrors => Ok(views.html.events.prices(formWithErrors)),
       pricesMap => {
@@ -53,11 +55,11 @@ object Seats extends Controller {
   val seatCheckboxMapping = mapping(
     "rows" -> list(rowMap))(rows => rows)(rows => Some(rows))
 
-  def checkSeat = Action { implicit request =>
+  def checkSeat = StackAction(AuthorityKey->Permission.default) { implicit request =>
     Ok(views.html.seats.seatcheck(seatCheckForm))
   }
 
-  def checkSeatProc = Action { implicit request =>
+  def checkSeatProc = StackAction(AuthorityKey->Permission.default) { implicit request =>
     seatCheckForm.bindFromRequest.fold(
       formWithErrors => Ok(views.html.seats.seatcheck(formWithErrors)),
       seatParams => {

@@ -2,7 +2,7 @@ package controllers
 
 import play.api.mvc.Controller
 import play.api.mvc.{ Action, Flash }
-import models.{ Event, Sector }
+import models.{ Event, Sector, User }
 import java.util.{ Date, Calendar }
 import java.sql.Timestamp
 import java.text.{ SimpleDateFormat, ParsePosition }
@@ -11,11 +11,14 @@ import play.api.i18n._
 import play.api.data.Forms._
 import play.api.data.validation.Constraints._
 import Dates._
+import jp.t2v.lab.play2.auth.AuthElement
+import models.Permission
 
-object Events extends Controller {
+
+object Events extends Controller with AuthElement with AuthConfigImpl {
   def isArchive(event: Event) = Calendar.getInstance().getTime().after(event.date)
 
-  def list(archive: Boolean = false) = Action {
+  def list(archive: Boolean = false) = StackAction(AuthorityKey->Permission.default) {
     implicit request =>
       val events = if (archive)
         Event.getAll.takeWhile(isArchive(_))
@@ -23,7 +26,7 @@ object Events extends Controller {
         Event.getAll.dropWhile(isArchive(_))
       Ok(views.html.events.list(events))
   }
-  def show(id: Long, sectorID: Long) = Action {
+  def show(id: Long, sectorID: Long) = StackAction(AuthorityKey->Permission.default) {
     implicit request =>
       val e = Event.getById(id)
       e match {
@@ -34,11 +37,11 @@ object Events extends Controller {
         }
       }
   }
-  def addNew = Action {
+  def addNew = StackAction(AuthorityKey->Permission.editEvent) {
     implicit request =>
       Ok(views.html.events.insert(eventForm))
   }
-  def remove(id: Long) = Action {
+  def remove(id: Long) = StackAction(AuthorityKey->Permission.editEvent) {
     implicit request =>
       Event.getById(id) match {
         case None => Redirect(routes.Events.list()).flashing("error" -> (Messages("events.notfound")))
@@ -58,7 +61,7 @@ object Events extends Controller {
       "dscr" -> text.verifying(maxLength(500)))(Event.apply)(Event.unapply)
   }
 
-  def insert = Action { implicit request =>
+  def insert = StackAction(AuthorityKey->Permission.editEvent) { implicit request =>
     eventForm.bindFromRequest.fold(
       formWithErrors => Ok(views.html.events.insert(formWithErrors)).flashing("error" -> "Исправьте ошибки в форме"),
       success = {
@@ -68,7 +71,7 @@ object Events extends Controller {
       })
   }
 
-  def edit(id: Long) = Action {
+  def edit(id: Long) = StackAction(AuthorityKey->Permission.editEvent) {
     implicit request =>
       val event = Event.getById(id)
       event match {
@@ -76,7 +79,7 @@ object Events extends Controller {
         case Some(x) => Ok(views.html.events.edit(eventForm.fill(x)))
       }
   }
-  def update = Action {
+  def update = StackAction(AuthorityKey->Permission.editEvent) {
     implicit request =>
       eventForm.bindFromRequest.fold(
         formWithErrors => Ok(views.html.events.edit(formWithErrors)).flashing("error" -> "Исправьте ошибки в форме"),
