@@ -1,0 +1,15 @@
+@* changePass Template File *@
+@(changePassForm: Form[(String, Option[String])])(implicit flash:Flash)
+
+@main("Смена пароля"){
+  <div class="container">
+  @helper.form(action= routes.Users.setPassword, 'role->"form", 'class->"form-signin"){
+        <input type="password" id="oldPassword" name="oldPassword" class="form-control" placeholder="Введите старый пароль" required>
+        <input type="password" id="newPassword.pass" name="newPassword.pass" class="form-control" placeholder="Введите новый пароль" required>
+        <input type="password" id="newPassword.passRepeat" name="newPassword.passRepeat" class="form-control" placeholder="Повторите новый пароль" required>
+        <button class="btn btn-lg btn-primary btn-block" type="submit">Изменить пароль</button>
+    }
+   </div>
+    <link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/signin.css")">
+    
+}

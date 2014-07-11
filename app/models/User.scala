@@ -16,8 +16,10 @@ object Permission {
   def editSales = (user: User) => user.canEditSales
 
   def editUsers = (user: User) => user.canEditUsers
+
+  def default = (user: User) => true
   
-  def default = (user:User)=>true
+  def sameUser(userID:Long) = (user:User)=>user.id==userID
 
 }
 
@@ -28,15 +30,16 @@ case class User(
   canEditEvents: Boolean,
   canEditSales: Boolean,
   canEditUsers: Boolean) extends KeyedEntity[Long] {
-
+  def this(id: Long, name: String, edEv: Boolean, edS: Boolean, edU: Boolean) =
+    this(id, name, "123456", edEv, edS, edU)
 }
 
 object User {
-  
-  def allQ = from(usersTable)(user=>select(user) orderBy (user.name asc))
-  
+
+  def allQ = from(usersTable)(user => select(user) orderBy (user.name asc))
+
   def getAll = inTransaction(allQ.toList)
-  
+
   def addNew(user: User) = inTransaction {
     usersTable.insert(
       user copy (password = Crypto.encryptAES(user.password)))
@@ -52,7 +55,7 @@ object User {
     usersByNameQ(name).headOption
   }
 
-  def auth(name: String, pass: String):Option[User] = inTransaction {
+  def auth(name: String, pass: String): Option[User] = inTransaction {
     findByName(name) match {
       case None => None
       case Some(user) =>
@@ -61,5 +64,14 @@ object User {
         else
           None
     }
+  }
+  def checkPass(pass: String, userID: Long): Boolean = inTransaction {
+    val user = findByID(userID).get
+    Crypto.encryptAES(pass) == user.password
+  }
+  def changePassword(newPass: String, userID: Long) = inTransaction {
+    update(usersTable)(user =>
+      where(user.id === userID)
+        set (user.password := Crypto.encryptAES(newPass)))
   }
 }

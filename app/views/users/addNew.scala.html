@@ -9,9 +9,6 @@
 		@helper.input(userForm("name"), '_label -> Messages("name"), '_class ->"form-group") { (id, name, value, args) =>
 	    <input type="text" value="@value"  name="@name" id="@id" @toHtmlArgs(args) class="form-control" placeholder="Введите имя пользователя">
 		}
-		@helper.input(userForm("password"), '_label ->"Пароль", '_class ->"form-group") { (id, name, value, args) =>
-	    <input type="text" value="@value"  name="@name" id="@id" @toHtmlArgs(args) class="form-control" placeholder="Введите пароль">
-		}				
 		
 		<div class="checkbox">
 			<lavel>

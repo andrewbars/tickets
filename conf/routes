@@ -55,5 +55,7 @@ GET		/users							controllers.Users.list
 GET		/users/new						controllers.Users.newUser
 POST	/users/new						controllers.Users.saveUser
 GET		/users/:userID					controllers.Users.show(userID:Long)
+GET		/users/changepassword	controllers.Users.changePassword
+POST	/users/changepassword	controllers.Users.setPassword
 
 	
