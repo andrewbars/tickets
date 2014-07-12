@@ -74,4 +74,7 @@ object User {
       where(user.id === userID)
         set (user.password := Crypto.encryptAES(newPass)))
   }
+  def updateUser(user:User) = inTransaction{
+    usersTable.update(user copy(password=findByID(user.id).get.password))
+  }
 }

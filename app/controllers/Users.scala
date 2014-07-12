@@ -35,10 +35,12 @@ object Users extends Controller with AuthElement with AuthConfigImpl {
   }
 
   def newUser = StackAction(AuthorityKey -> Permission.editUsers) { implicit request =>
+    implicit val user = Some(loggedIn)
     Ok(views.html.users.addNew(userForm))
   }
 
   def saveUser = StackAction(AuthorityKey -> Permission.editUsers) { implicit request =>
+    implicit val user = Some(loggedIn)
     userForm.bindFromRequest.fold(
       formWithErrors => Ok(views.html.users.addNew(formWithErrors)),
       user => {
@@ -48,28 +50,45 @@ object Users extends Controller with AuthElement with AuthConfigImpl {
   }
 
   def list = StackAction(AuthorityKey -> Permission.editUsers) { implicit request =>
+    implicit val user = Some(loggedIn)
     val users = User.getAll
     Ok(views.html.users.list(users))
   }
 
   def show(userID: Long) = StackAction(AuthorityKey -> Permission.editUsers) { implicit request =>
+    implicit val loggeduser = Some(loggedIn)
     User.findByID(userID) match {
       case None => Redirect(routes.Users.list).flashing("error" -> "Пользователь с таким ID не найден")
       case Some(user) => Ok(views.html.users.details(user))
     }
   }
   def changePassword = StackAction(AuthorityKey -> Permission.default) { implicit request =>
+    implicit val user = Some(loggedIn)
     Ok(views.html.users.changePass(passChangeForm))
   }
 
   def setPassword = StackAction(AuthorityKey -> Permission.default) { implicit request =>
-    val user = loggedIn
+    implicit val user = Some(loggedIn)
     passChangeForm.bindFromRequest.fold(
-      formWithErrors => NotImplemented,
-      newPass => if (User.checkPass(newPass._1, user.id)) {
-        User.changePassword(newPass._2.get, user.id)
+      formWithErrors => Ok(views.html.users.changePass(formWithErrors)),
+      newPass => if (User.checkPass(newPass._1, user.get.id)) {
+        User.changePassword(newPass._2.get, user.get.id)
         Redirect(routes.Events.list(false)).flashing("success" -> "Пароль успешно изменен")
       } else
         Redirect(routes.Users.changePassword).flashing("error" -> "Введен неправильный пароль! Попробуйте еще раз"))
+  }
+  def editUser(userID:Long) = StackAction(AuthorityKey -> Permission.editUsers){implicit request=>
+  	implicit val loggedUser = Some(loggedIn)
+  	Ok(views.html.users.edit(userForm.fill(User.findByID(userID).get)))
+  }
+  def updateUser = StackAction(AuthorityKey -> Permission.editUsers){implicit request=>
+  	implicit val user = Some(loggedIn)
+  	userForm.bindFromRequest.fold(
+  		formWithErrors=>Ok(views.html.users.edit(formWithErrors)),
+  		user=>{
+  		  User.updateUser(user)
+  		  Redirect(routes.Users.list).flashing("success"->"Сохранено!")
+  		}
+  	)
   }
 }

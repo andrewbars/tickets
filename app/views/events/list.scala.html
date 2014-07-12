@@ -1,5 +1,5 @@
 @* list Template File *@
-@(events:List[Event])(implicit flash:Flash)
+@(events:List[Event])(implicit flash:Flash, user:Option[User])
 
 @main("Events list"){
 	<div class="container">

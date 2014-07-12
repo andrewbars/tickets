@@ -1,5 +1,20 @@
 @* details Template File *@
-@(user: User)(implicit flash:Flash)
+@(user: User)(implicit flash:Flash, loggedUser:Option[User])
+
+@main("Пользователь" + user.name){
+	<div class="container">
+		<div class="container">
+			<ul class="nav nav-tabs">
+				<li><a href="@routes.Users.editUser(user.id)" class="btn btn-default active" role="button">@Messages("edit")</a></li>
+			</ul>
+		</div>
+		<div class="jumbotron">
+			<h1>@("Пользователь " + user.name)</h1>
+			<p> <strong>@if(models.Permission.editEvent(user)){Может}else{Не может}</strong> редактировать события
+			<p> <strong>@if(models.Permission.editSales(user)){Может}else{Не может}</strong> редактировать продажи
+			<p> <strong>@if(models.Permission.editUsers(user)){Может}else{Не может}</strong> редактировать пользователей
+		</div>
+}
 
 
 

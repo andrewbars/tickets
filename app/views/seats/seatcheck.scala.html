@@ -1,5 +1,5 @@
 @* seatcheck Template File *@
-@(seatCheckForm:Form[(Long, String,Int,Int)])(implicit flash:Flash)
+@(seatCheckForm:Form[(Long, String,Int,Int)])(implicit flash:Flash, user:Option[User])
 
 
 @import views.helpers.bootstrap._

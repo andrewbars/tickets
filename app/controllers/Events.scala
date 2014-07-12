@@ -20,6 +20,7 @@ object Events extends Controller with AuthElement with AuthConfigImpl {
 
   def list(archive: Boolean = false) = StackAction(AuthorityKey->Permission.default) {
     implicit request =>
+      implicit val user = Some(loggedIn)
       val events = if (archive)
         Event.getAll.takeWhile(isArchive(_))
       else
@@ -28,6 +29,7 @@ object Events extends Controller with AuthElement with AuthConfigImpl {
   }
   def show(id: Long, sectorID: Long) = StackAction(AuthorityKey->Permission.default) {
     implicit request =>
+      implicit val user = Some(loggedIn)
       val e = Event.getById(id)
       e match {
         case None => Redirect(routes.Events.list()).flashing("error" -> (Messages("events.notfound")))
@@ -39,10 +41,11 @@ object Events extends Controller with AuthElement with AuthConfigImpl {
   }
   def addNew = StackAction(AuthorityKey->Permission.editEvent) {
     implicit request =>
+      implicit val user = Some(loggedIn)
       Ok(views.html.events.insert(eventForm))
   }
-  def remove(id: Long) = StackAction(AuthorityKey->Permission.editEvent) {
-    implicit request =>
+  def remove(id: Long) = StackAction(AuthorityKey->Permission.editEvent) {implicit request =>
+      implicit val user = Some(loggedIn)
       Event.getById(id) match {
         case None => Redirect(routes.Events.list()).flashing("error" -> (Messages("events.notfound")))
         case Some(x) => {
@@ -62,6 +65,7 @@ object Events extends Controller with AuthElement with AuthConfigImpl {
   }
 
   def insert = StackAction(AuthorityKey->Permission.editEvent) { implicit request =>
+    implicit val user = Some(loggedIn)
     eventForm.bindFromRequest.fold(
       formWithErrors => Ok(views.html.events.insert(formWithErrors)).flashing("error" -> "Исправьте ошибки в форме"),
       success = {
@@ -73,15 +77,16 @@ object Events extends Controller with AuthElement with AuthConfigImpl {
 
   def edit(id: Long) = StackAction(AuthorityKey->Permission.editEvent) {
     implicit request =>
+      implicit val user = Some(loggedIn)
       val event = Event.getById(id)
       event match {
         case None => NotFound
         case Some(x) => Ok(views.html.events.edit(eventForm.fill(x)))
       }
   }
-  def update = StackAction(AuthorityKey->Permission.editEvent) {
-    implicit request =>
-      eventForm.bindFromRequest.fold(
+  def update = StackAction(AuthorityKey->Permission.editEvent) {implicit request =>
+    implicit val user = Some(loggedIn)  
+    eventForm.bindFromRequest.fold(
         formWithErrors => Ok(views.html.events.edit(formWithErrors)).flashing("error" -> "Исправьте ошибки в форме"),
         success = {
           event =>

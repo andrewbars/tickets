@@ -29,6 +29,7 @@ object Seats extends Controller with AuthElement with AuthConfigImpl {
       Some((for (name <- Sector.sectorNames) yield (name, priceMap(name))).unzip)))
 
   def setPrices(implicit eventID: Long) = StackAction(AuthorityKey->Permission.editEvent) { implicit request =>
+    implicit val user = Some(loggedIn)
     Event.getSectors(eventID) match {
       case None => Redirect(routes.Events.list()).flashing("error" -> (Messages("events.notfound")))
       case Some(sectors) =>
@@ -37,6 +38,7 @@ object Seats extends Controller with AuthElement with AuthConfigImpl {
     }
   }
   def savePrices(implicit eventID: Long) = StackAction(AuthorityKey->Permission.editEvent) { implicit request =>
+    implicit val user = Some(loggedIn)
     sectorPriceForm.bindFromRequest.fold(
       formWithErrors => Ok(views.html.events.prices(formWithErrors)),
       pricesMap => {
@@ -56,10 +58,12 @@ object Seats extends Controller with AuthElement with AuthConfigImpl {
     "rows" -> list(rowMap))(rows => rows)(rows => Some(rows))
 
   def checkSeat = StackAction(AuthorityKey->Permission.default) { implicit request =>
+    implicit val user = Some(loggedIn)
     Ok(views.html.seats.seatcheck(seatCheckForm))
   }
 
   def checkSeatProc = StackAction(AuthorityKey->Permission.default) { implicit request =>
+    implicit val user = Some(loggedIn)
     seatCheckForm.bindFromRequest.fold(
       formWithErrors => Ok(views.html.seats.seatcheck(formWithErrors)),
       seatParams => {

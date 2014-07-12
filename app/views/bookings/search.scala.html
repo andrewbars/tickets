@@ -1,5 +1,5 @@
 @* search Template File *@
-@(searchForm: Form[String])(implicit flash:Flash)
+@(searchForm: Form[String])(implicit flash:Flash, user:Option[User])
 
 @import views.helpers.bootstrap._
 

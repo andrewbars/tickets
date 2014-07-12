@@ -20,7 +20,8 @@ object Sales extends Controller with AuthElement with AuthConfigImpl {
 
   val saleForm = Form(seatCheckboxMapping)
 
-  def newSale(sectorID: Long, eventID: Long) = StackAction(AuthorityKey->Permission.default) { implicit request =>
+  def newSale(sectorID: Long, eventID: Long) = StackAction(AuthorityKey -> Permission.default) { implicit request =>
+    implicit val user = Some(loggedIn)
     val sector = Sector.getByID(sectorID)
     sector match {
       case None => Redirect(routes.Events.show(eventID)).flashing("error" -> "Задан неверный номер сектора")
@@ -29,7 +30,8 @@ object Sales extends Controller with AuthElement with AuthConfigImpl {
     }
   }
 
-  def saveSale(sectorID: Long, eventID: Long) = StackAction(AuthorityKey->Permission.default) { implicit request =>
+  def saveSale(sectorID: Long, eventID: Long) = StackAction(AuthorityKey -> Permission.default) { implicit request =>
+    implicit val user = Some(loggedIn)
     val sec = Sector.getByID(sectorID).get
     saleForm.bindFromRequest.fold(
       formWithErrors =>
@@ -42,17 +44,18 @@ object Sales extends Controller with AuthElement with AuthConfigImpl {
         Redirect(routes.Sales.show(sale.id)).flashing("info" -> "Проверьте и подтвердите продажу")
       })
   }
-  def confirmSale(saleID: Long) = StackAction(AuthorityKey->Permission.default) { implicit request =>
+  def confirmSale(saleID: Long) = StackAction(AuthorityKey -> Permission.default) { implicit request =>
     val sale = Sale.getByID(saleID).get
     Sale.confirmSale(sale)
     Redirect(routes.Events.show(sale.eventID)).flashing("success" -> "Продажа подтвержена!")
   }
-  def revertSale(saleID: Long) = StackAction(AuthorityKey->Permission.default) { implicit request =>
+  def revertSale(saleID: Long) = StackAction(AuthorityKey -> Permission.default) { implicit request =>
     val sale = Sale.getByID(saleID).get
     Sale.revertSale(sale)
     Redirect(routes.Events.show(sale.eventID)).flashing("info" -> "Продажа отменена!")
   }
-  def show(saleID: Long) = StackAction(AuthorityKey->Permission.default) { implicit request =>
+  def show(saleID: Long) = StackAction(AuthorityKey -> Permission.default) { implicit request =>
+    implicit val user = Some(loggedIn)
     Sale.getByID(saleID) match {
       case None => Redirect(routes.Events.list()).flashing("error" -> "Продажа с таким ID не найдена")
       case Some(sale) => {

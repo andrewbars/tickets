@@ -1,5 +1,5 @@
 @* list Template File *@
-@(bookings:List[Booking], searchForm:Form[String])(implicit flash:Flash)
+@(bookings:List[Booking], searchForm:Form[String])(implicit flash:Flash, user:Option[User])
 
 @main("Результаты поиска"){
 	@views.html.bookings.searchform(searchForm)

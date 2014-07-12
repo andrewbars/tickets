@@ -1,5 +1,5 @@
 @* list Template File *@
-@(users: List[User])(implicit flash:Flash)
+@(users: List[User])(implicit flash:Flash, user:Option[User])
 
 @main("Список пользователей"){
 	<div class="container">

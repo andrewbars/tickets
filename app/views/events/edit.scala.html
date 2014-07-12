@@ -1,5 +1,5 @@
 @* edit Template File *@
-@(ev: Form[Event])(implicit flash:Flash)
+@(ev: Form[Event])(implicit flash:Flash, user:Option[User])
 @import views.helpers.bootstrap._
 
 @main(Messages("events.edit")){
@@ -8,7 +8,7 @@
 		@helper.input(ev("id"), '_class ->"form-group"){ (id, name, value, args) =>
 	    <input type="text" value="@value" name="@name" id="@id" @toHtmlArgs(args) class="form-control" readonly>
 		}
-		@eventForm(ev)
+		@views.html.events.eventForm(ev)
 			<button type="submit" class="bth btn-primary btn-lg">@Messages("save")</button>
 		}
 	</div>

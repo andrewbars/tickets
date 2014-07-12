@@ -1,6 +1,6 @@
 @* sale Template File *@
 
-@(sector:Sector, eventID:Long, orderedSeats:List[Seat])(rowForm:Form[List[List[Int]]])(implicit flash:Flash)
+@(sector:Sector, eventID:Long, orderedSeats:List[Seat])(rowForm:Form[List[List[Int]]])(implicit flash:Flash, user:Option[User])
 
 @main("Сектор "+sector.name){
 	@helper.form(action= routes.Sales.saveSale(sector.id, eventID), 'role->"form", 'class->"form-horizontal"){

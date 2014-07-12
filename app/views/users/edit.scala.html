@@ -1,0 +1,13 @@
+@* edit Template File *@
+@(userForm: Form[User])(implicit flash:Flash, user:Option[User])
+
+@main("Редактирование пользователя"){
+	<div class="container">
+		@helper.form(action= routes.Users.updateUser, 'role->"form", 'class->"form-horizontal"){
+		@helper.input(userForm("id"), '_label -> "ID", '_class ->"form-group") { (id, name, value, args) =>
+	    <input type="text" value="@value" name="id" id="id" class="form-control" readonly>
+		}			
+			@views.html.users.userForm(userForm)
+	}
+	</div>	
+}

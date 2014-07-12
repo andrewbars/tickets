@@ -1,6 +1,6 @@
 @* booking Template File *@
 
-@(sector:Sector, eventID:Long, orderedSeats:List[Seat])(bookingForm:Form[(java.sql.Timestamp,String,List[List[Int]])])(implicit flash:Flash)
+@(sector:Sector, eventID:Long, orderedSeats:List[Seat])(bookingForm:Form[(java.sql.Timestamp,String,List[List[Int]])])(implicit flash:Flash, user:Option[User])
 
 @main("Сектор "+sector.name){
 	<div class="container">

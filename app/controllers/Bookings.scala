@@ -22,7 +22,9 @@ object Bookings extends Controller with AuthElement with AuthConfigImpl {
     "expDate" -> dateTimeMapping,
     "clientName" -> nonEmptyText,
     "seats" -> seatCheckboxMapping)((expDate, clientName, seats) => (expDate, clientName, seats))(book => Some(book)))
-  def newBooking(sectorID: Long, eventID: Long) = Action { implicit request =>
+
+  def newBooking(sectorID: Long, eventID: Long) = StackAction(AuthorityKey -> Permission.default) { implicit request =>
+    implicit val user = Some(loggedIn)
     val sector = Sector.getByID(sectorID)
     sector match {
       case None => Redirect(routes.Events.show(eventID)).flashing("error" -> "Задан неверный номер сектора")
@@ -31,7 +33,8 @@ object Bookings extends Controller with AuthElement with AuthConfigImpl {
     }
   }
 
-  def saveBooking(sectorID: Long, eventID: Long) = StackAction(AuthorityKey->Permission.default) { implicit request =>
+  def saveBooking(sectorID: Long, eventID: Long) = StackAction(AuthorityKey -> Permission.default) { implicit request =>
+    implicit val user = Some(loggedIn)
     val sec = Sector.getByID(sectorID).get
     bookingForm.bindFromRequest.fold(
       formWithErrors =>
@@ -44,12 +47,13 @@ object Bookings extends Controller with AuthElement with AuthConfigImpl {
         Redirect(routes.Bookings.show(booking.id)).flashing("info" -> "Проверьте и подтвердите бронирование")
       })
   }
-  def confirmBooking(bookingID: Long) = StackAction(AuthorityKey->Permission.default) { implicit request =>
+  def confirmBooking(bookingID: Long) = StackAction(AuthorityKey -> Permission.default) { implicit request =>
     val booking = Booking.getById(bookingID).get
     Booking.confirmBooking(booking)
     Redirect(routes.Events.show(booking.eventID)).flashing("success" -> "Бронирование подтверждено!")
   }
-  def revertBooking(bookingID: Long) = StackAction(AuthorityKey->Permission.default) { implicit request =>
+  def revertBooking(bookingID: Long) = StackAction(AuthorityKey -> Permission.default) { implicit request =>
+    implicit val user = Some(loggedIn)
     val booking = Booking.getById(bookingID).get
     Booking.revertBooking(booking)
     Redirect(routes.Events.show(booking.eventID)).flashing("info" -> "Бронирование отменено!")
@@ -66,7 +70,8 @@ object Bookings extends Controller with AuthElement with AuthConfigImpl {
     Redirect(routes.Sales.show(sale.id)).flashing("success" -> "Выкуп продажи успешно подтвержден!")
   }
 
-  def show(bookingID: Long) = StackAction(AuthorityKey->Permission.default) { implicit request =>
+  def show(bookingID: Long) = StackAction(AuthorityKey -> Permission.default) { implicit request =>
+    implicit val user = Some(loggedIn)
     Booking.getById(bookingID) match {
       case None => Redirect(routes.Events.list()).flashing("error" -> "Бронирование с таким ID не найдена")
       case Some(booking) => {
@@ -79,11 +84,13 @@ object Bookings extends Controller with AuthElement with AuthConfigImpl {
   val searchForm = Form(mapping(
     "valToSearch" -> nonEmptyText)(valToSearch => valToSearch)(valToSearch => Some(valToSearch)))
 
-  def find = StackAction(AuthorityKey->Permission.default) { implicit request =>
+  def find = StackAction(AuthorityKey -> Permission.default) { implicit request =>
+    implicit val user = Some(loggedIn)
     Ok(views.html.bookings.search(searchForm))
   }
 
-  def findProc = StackAction(AuthorityKey->Permission.default) { implicit request =>
+  def findProc = StackAction(AuthorityKey -> Permission.default) { implicit request =>
+    implicit val user = Some(loggedIn)
     searchForm.bindFromRequest.fold(
       formWithErrors => Ok(views.html.bookings.search(formWithErrors)),
       searchVal => {
@@ -103,7 +110,7 @@ object Bookings extends Controller with AuthElement with AuthConfigImpl {
         }
       })
   }
-  def excludeOne(seatID: Long, bookingID: Long) = StackAction(AuthorityKey->Permission.default) { implicit request =>
+  def excludeOne(seatID: Long, bookingID: Long) = StackAction(AuthorityKey -> Permission.default) { implicit request =>
     Seat.deleteOne(seatID)
     val booking = Booking.getById(bookingID).get
     if (Booking.seats(booking).isEmpty) {

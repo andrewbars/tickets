@@ -1,4 +1,4 @@
-@(title: String)(content: Html)(implicit flash:Flash)
+@(title: String)(content: Html)(implicit flash:Flash, user:Option[User])
 
 <!DOCTYPE html>
 
@@ -17,7 +17,8 @@
 		      		<a class="navbar-brand" href=@routes.Application.index()>
 		        		@Messages("app.dev")
 		        	</a>
-		        </div>
+		        </div>	      	
+	      	@if(user.isDefined){
 		        <div class="collapse navbar-collapse">
 		        	<ul class="nav navbar-nav">
 		        		<li class="dropdown">
@@ -25,17 +26,38 @@
 		        			<ul class="dropdown-menu">
 		        				<li><a href="@routes.Events.list(false)">@Messages("events.active")</a></li>
 		        				<li><a href="@routes.Events.list(true)">@Messages("events.archive")</a></li>
-		        				<li><a href="@routes.Events.addNew">@Messages("add")</a></li>
+		        				@if(models.Permission.editEvent(user.get)){
+		        					<li><a href="@routes.Events.addNew">@Messages("add")</a></li>}
 		        			</ul>
 		        		</li>
-	        		<li class="dropdown">
-		        		<a href="#" class="dropdown-toggle" data-toggle="dropdown">@Messages("tickets")<b class="caret"></b></a>
-		        			<ul class="dropdown-menu">
-		        				<li><a href="@routes.Seats.checkSeat">@Messages("seat.check")</a></li>
-		        				<li><a href="@routes.Bookings.find">Поиск брони</a></li>
-		        			</ul>
-		        		</li>		        		
+		        		<li class="dropdown">
+			        		<a href="#" class="dropdown-toggle" data-toggle="dropdown">@Messages("tickets")<b class="caret"></b></a>
+			        			<ul class="dropdown-menu">
+			        				<li><a href="@routes.Seats.checkSeat">@Messages("seat.check")</a></li>
+			        				<li><a href="@routes.Bookings.find">Поиск брони</a></li>
+			        			</ul>
+			        		</li>
+		        		<li class="dropdown">
+			        		<a href="#" class="dropdown-toggle" data-toggle="dropdown">Пользователи<b class="caret"></b></a>
+			        			<ul class="dropdown-menu">
+			        				@if(models.Permission.editUsers(user.get)){
+			        				<li><a href="@routes.Users.list">Список</a></li>
+			        				<li><a href="@routes.Users.newUser">Добавить</a></li>
+			        				<li class="divider"></li>}
+			        				<li><a href="@routes.Users.changePassword">Изменить пароль</a></li>
+			        			</ul>
+			        		</li>	     			        				        		
 		        	</ul>
+		        	}
+					<p class = "navbar-text navbar-right">
+						@if(user.isDefined){
+							Вы вошли как @user.get.name 
+							<a href = "@routes.Application.logout" class = "navbar-link">(Выход)</a>
+						}else{
+							Вход не выполнен
+							<a href = "@routes.Application.login" class = "navbar-link">(Войти)</a>
+						}
+					</p>  		
 		      	</div>
 	      	</div>
 	      </nav>

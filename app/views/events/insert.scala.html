@@ -1,5 +1,5 @@
 @* insert Template File *@
-@(ev: Form[Event])(implicit flash:Flash)
+@(ev: Form[Event])(implicit flash:Flash, user:Option[User])
 @import views.helpers.bootstrap._
 
 @main("Создание события"){

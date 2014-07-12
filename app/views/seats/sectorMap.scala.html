@@ -1,5 +1,5 @@
 @* sectorMap Template File *@
-@(sector:Sector, orderedSeats:List[Seat])
+@(sector:Sector, orderedSeats:List[Seat])(implicit user:Option[User])
 	
 	
 	<h3>Сектор: @sector.name</h3>

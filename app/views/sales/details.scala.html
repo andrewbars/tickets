@@ -1,5 +1,5 @@
 @* details Template File *@
-@(sale:Sale, event:Event)(implicit flash:Flash)
+@(sale:Sale, event:Event)(implicit flash:Flash, user:Option[User])
 
 @main("Продажа № "+sale.id){
 	<div class="container">

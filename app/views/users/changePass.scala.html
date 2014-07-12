@@ -1,5 +1,5 @@
 @* changePass Template File *@
-@(changePassForm: Form[(String, Option[String])])(implicit flash:Flash)
+@(changePassForm: Form[(String, Option[String])])(implicit flash:Flash, user:Option[User])
 
 @main("Смена пароля"){
   <div class="container">

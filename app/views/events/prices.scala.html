@@ -1,5 +1,5 @@
 @* prices Template File *@
-@(pricesForm: Form[Map[String,Int]])(implicit flash:Flash, id:Long)
+@(pricesForm: Form[Map[String,Int]])(implicit flash:Flash, id:Long, user:Option[User])
 
 @import views.helpers.bootstrap._
 
