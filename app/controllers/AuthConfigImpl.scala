@@ -22,7 +22,7 @@ trait AuthConfigImpl extends AuthConfig {
   def resolveUser(id: Id)(implicit ctx: ExecutionContext): Future[Option[User]] = Future(models.User.findByID(id))
 
   def loginSucceeded(request: RequestHeader)(implicit ctx: ExecutionContext): Future[SimpleResult] =
-    Future.successful(Redirect(routes.Events.list(false)))
+    Future.successful(Redirect(routes.General.logged))
     
   def logoutSucceeded(request: RequestHeader)(implicit ctx: ExecutionContext): Future[SimpleResult] =
     Future.successful(Redirect(routes.Application.login))

@@ -4,12 +4,13 @@
 @main(event.name){
 	<div class="container">
 		<div class="container">
+			@if(Permission.editEvent(user.get)){
 			<ul class="nav nav-tabs">
 				<li><a href="@routes.Events.edit(event.id)" class="btn btn-default active" role="button">@Messages("edit")</a></li>
 				@if(!controllers.Events.isArchive(event)){<li><a href="@routes.Seats.setPrices(event.id)" class="btn btn-default active" role="button">@Messages("prices.set.name")</a></li>}
 				<li><a class="btn btn-danger active" href="@routes.Events.remove(event.id)"role="button">@Messages("delete")</a></li>	
 			</ul>
-		</div>
+		</div>}
 		<div class="jumbotron">
 			<h1>@(event.tp+" "+event.name)</h1>
 			<h2>@(Dates.dateTimeFormat.format(event.date))</h2>

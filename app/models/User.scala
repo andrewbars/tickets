@@ -11,15 +11,17 @@ import Database._
 
 object Permission {
 
-  def editEvent = (user: User) => user.canEditEvents
+  def editEvent = (user: User) => user.canEditEvents && default(user)
 
-  def editSales = (user: User) => user.canEditSales
+  def editSales = (user: User) => user.canEditSales && default(user)
 
-  def editUsers = (user: User) => user.canEditUsers
+  def editUsers = (user: User) => user.canEditUsers && default(user)
 
-  def default = (user: User) => true
-  
-  def sameUser(userID:Long) = (user:User)=>user.id==userID
+  def default = (user: User) => user.isActive && !user.isNew
+
+  def sameUser(userID: Long) = (user: User) => user.id == userID && default(user)
+
+  def anyUser = (user: User) => true
 
 }
 
@@ -29,9 +31,10 @@ case class User(
   password: String,
   canEditEvents: Boolean,
   canEditSales: Boolean,
-  canEditUsers: Boolean) extends KeyedEntity[Long] {
-  def this(id: Long, name: String, edEv: Boolean, edS: Boolean, edU: Boolean) =
-    this(id, name, "123456", edEv, edS, edU)
+  canEditUsers: Boolean,
+  isNew: Boolean,
+  isActive: Boolean) extends KeyedEntity[Long] {
+
 }
 
 object User {
@@ -72,9 +75,26 @@ object User {
   def changePassword(newPass: String, userID: Long) = inTransaction {
     update(usersTable)(user =>
       where(user.id === userID)
-        set (user.password := Crypto.encryptAES(newPass)))
+        set (user.password := Crypto.encryptAES(newPass),
+          user.isNew := false))
   }
-  def updateUser(user:User) = inTransaction{
-    usersTable.update(user copy(password=findByID(user.id).get.password))
+  def updateUser(user: User) = inTransaction {
+    usersTable.update(user copy (password = findByID(user.id).get.password, isNew = false))
+  }
+  def resetPassword(userID: Long) = inTransaction {
+    update(usersTable)(user =>
+      where(user.id === userID)
+        set (user.password := Crypto.encryptAES("123456"),
+          user.isNew := true))
+  }
+  def disableUser(userID: Long) = inTransaction {
+    update(usersTable)(user =>
+      where(user.id === userID)
+        set (user.isActive := false))
+  }
+  def enableUser(userID: Long) = inTransaction {
+    update(usersTable)(user =>
+      where(user.id === userID)
+        set (user.isActive := true))
   }
 }

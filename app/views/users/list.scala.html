@@ -6,7 +6,10 @@
 		<div class="list-group">
 			@for(user<-users){
 				<h4 class="list-group-item-heading"><a href=@routes.Users.show(user.id:Long) class="list-group-item"> 
-					@(user.name)</a></h4>
+					@(user.name) @if(!user.isActive){
+					<p class="text-danger" style="display:inline; float:right">(Заблокирован)!</p>
+				}</a></h4>
+		
 			}
 		</div>
 	</div>
