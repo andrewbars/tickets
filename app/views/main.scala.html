@@ -53,9 +53,6 @@
 						@if(user.isDefined){
 							Вы вошли как @user.get.name 
 							<a href = "@routes.Application.logout" class = "navbar-link">(Выход)</a>
-						}else{
-							Вход не выполнен
-							<a href = "@routes.Application.login" class = "navbar-link">(Войти)</a>
 						}
 					</p>  		
 		      	</div>

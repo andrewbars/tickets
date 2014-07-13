@@ -18,27 +18,7 @@
 	}
 </div>
 <h2>Выберете места: </h2>
-<table class="table table-condensed table-responsive table-hover">
-		@for(row<-1 to sector.numOfRows) {
-			<tr class="small-row">
-				<td class="success">@(row)</td>
-				@for(seat<-1 to sector.seatsInRow) {
-					<td 
-					class= "@if(orderedSeats
-						exists(s=>s.rowNumber==row&&s.num==seat&&s.sold)){danger}else{
-						@if(orderedSeats
-						exists(s=>s.rowNumber==row&&s.num==seat&&s.booked)){warning}else{info}}">
-					@helper.input(bookingForm("seats.rows"+"["+row+"].checkedSeats["+seat+"]"), '_class ->"checkbox-inline",'_label->seat){ (id, name, value, args) =>
-   						<input type="checkbox" id="@id" name="@name"  @toHtmlArgs(args) value="true" class="checkbox-inline"
-   						@if(orderedSeats
-						exists(s=>s.rowNumber==row&&s.num==seat)){disabled}>
-						<input type="hidden" id="@id" name="@name"  @toHtmlArgs(args) value="false">
-   					}
-					</td>
-				}
-			</tr>	
-			}
-		</table>
+		@seats.seatCheckboxForm(sector, orderedSeats)
 		<button type="submit" class="bth btn-primary btn-lg">@Messages("save")</button>
 	}
 }

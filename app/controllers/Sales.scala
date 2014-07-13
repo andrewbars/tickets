@@ -18,7 +18,11 @@ import models.Permission
 
 object Sales extends Controller with AuthElement with AuthConfigImpl {
 
-  val saleForm = Form(seatCheckboxMapping)
+  val saleForm = Form(
+	mapping(
+		"seats"->seatCheckboxMapping
+	)(seats=>seats)(seats=>Some(seats))
+  )
 
   def newSale(sectorID: Long, eventID: Long) = StackAction(AuthorityKey -> Permission.default) { implicit request =>
     implicit val user = Some(loggedIn)

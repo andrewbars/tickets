@@ -1,5 +1,5 @@
 @* seatCheckboxForm Template File *@
-@(sector:Sector, orderedSeats:List[Seat], rowForm:Form[List[List[Int]]])
+@(sector:Sector, orderedSeats:List[Seat])
 
 		<table class="table table-condensed table-responsive table-hover">
 		@for(row<-1 to sector.numOfRows) {
@@ -9,12 +9,18 @@
 					<td 
 					class= "@if(orderedSeats
 						exists(s=>s.rowNumber==row&&s.num==seat)){danger}else{info}">
-					@helper.input(rowForm("rows"+"["+row+"].checkedSeats["+seat+"]"), '_class ->"checkbox-inline",'_label->seat){ (id, name, value, args) =>
-   						<input type="checkbox" id="@id" name="@name"  @toHtmlArgs(args) value="true" class="checkbox-inline"
-   						@if(orderedSeats
-						exists(s=>s.rowNumber==row&&s.num==seat)){disabled}>
-						<input type="hidden" id="@id" name="@name"  @toHtmlArgs(args) value="false">
-   					}
+		   					
+   					<input type="checkbox" id="@("seats.rows"+"["+row+"].checkedSeats["+seat+"]")"
+   					 name="@("seats.rows"+"["+row+"].checkedSeats["+seat+"]")" 
+   					 value="true" class="checkbox-inline"
+   					 @if(orderedSeats exists(s=>s.rowNumber==row&&s.num==seat)){disabled}> 
+   					 
+   					 <span class="help-inline"> @seat </span>
+					 
+					 <input type="hidden" id="@("seats.rows"+"["+row+"].checkedSeats["+seat+"]")" 
+					 name="@("seats.rows"+"["+row+"].checkedSeats["+seat+"]")" 
+					  value="false"> 
+					  
 					</td>
 				}
 			</tr>	

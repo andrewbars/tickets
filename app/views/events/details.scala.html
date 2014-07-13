@@ -16,19 +16,22 @@
 			<h2>@(Dates.dateTimeFormat.format(event.date))</h2>
 			<p>@event.dscr</p>
 		</div>
+	</div>
 		@if(!controllers.Events.isArchive(event)){
-			<div class="container">
-				<li class="dropdown">
-					<button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
-						Выберете сектор для просмотра свободных мест
-					<span class="caret"></span></button>
-				    	<ul class="dropdown-menu scrollable-menu">
-				    		<li><a href="@routes.Events.show(event.id)">Показать схему поля</a></li>
-				    		@for(sec<-Event.getSectors(event.id).get){
-				    			<li><a href="@routes.Events.show(event.id, sec.id)">@sec.name</a></li>
-				    		}
-				        </ul>
-				</li>
+			<div class="container-fluid">
+				<div class="container">
+					<span class="dropdown">
+						<button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+							Выберете сектор для просмотра свободных мест
+						<span class="caret"></span></button>
+					    	<ul class="dropdown-menu scrollable-menu">
+					    		<li><a href="@routes.Events.show(event.id)">Показать схему поля</a></li>
+					    		@for(sec<-Event.getSectors(event.id).get){
+					    			<li><a href="@routes.Events.show(event.id, sec.id)">@sec.name</a></li>
+					    		}
+					        </ul>
+					</span>
+				</div>
 				@if(sector.isDefined){
 					@seats.sectorMap(sector.get,Sector.orderedSeatsInSector(sector.get))
 					<p>

@@ -4,7 +4,7 @@
 
 @main("Сектор "+sector.name){
 	@helper.form(action= routes.Sales.saveSale(sector.id, eventID), 'role->"form", 'class->"form-horizontal"){
-		@seats.seatCheckboxForm(sector, orderedSeats, rowForm)
+		@seats.seatCheckboxForm(sector, orderedSeats)
 		<button type="submit" class="bth btn-primary btn-lg">@Messages("save")</button>
 	}
 }
