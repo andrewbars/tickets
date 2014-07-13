@@ -10,7 +10,7 @@
 		<div class="list-group">
 			@for(event<-events){
 				<h4 class="list-group-item-heading"><a href=@routes.Events.show(event.id:Long) class="list-group-item"> 
-					@(event.tp+" "+event.name+": " + Dates.dateTimeFormat.format(event.date))</a></h4>
+					@(event.name+": " + Dates.dateTimeFormat.format(event.date))</a></h4>
 	    		<p class="list-group-item-text">@event.dscr</p>
 			}
 		</div>

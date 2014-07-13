@@ -5,7 +5,7 @@
 	<div class="container">
 		<div class="jumbotron">
 			<h1>@("Детали бронирования № " + booking.id)</h1>
-			<h2>@("Событие: "+event.tp+" "+event.name)</h2>
+			<h2>@("Событие: "+event.name)</h2>
 			<h3>@("Дата события:" + Dates.dateTimeFormat.format(event.date))</h3>
 			<p>На имя: @booking.clientName</p>
 			<p>Бронь произведена: @Dates.dateTimeFormat.format(booking.date)</p>

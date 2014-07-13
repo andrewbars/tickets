@@ -9,7 +9,6 @@ import collection.Iterable
 
 case class Event(
   id: Long,
-  tp: String,
   name: String,
   date: Timestamp,
   dscr: String) extends KeyedEntity[Long] {

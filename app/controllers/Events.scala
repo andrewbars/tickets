@@ -58,7 +58,6 @@ object Events extends Controller with AuthElement with AuthConfigImpl {
   val eventForm = Form {
     mapping(
       "id" -> longNumber,
-      "tp" -> nonEmptyText.verifying(maxLength(20)),
       "name" -> nonEmptyText.verifying(maxLength(100)),
       "date" -> dateTimeMapping.verifying("Дата должна быть больше текущей", Calendar.getInstance().getTime().before(_)),
       "dscr" -> text.verifying(maxLength(500)))(Event.apply)(Event.unapply)

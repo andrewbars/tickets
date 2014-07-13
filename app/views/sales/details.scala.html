@@ -5,7 +5,7 @@
 	<div class="container">
 		<div class="jumbotron">
 			<h1>@("Детали продажи № " + sale.id)</h1>
-			<h2>@("Событие: "+event.tp+" "+event.name)</h2>
+			<h2>@("Событие: "+event.name)</h2>
 			<h3>@("Дата события:" + Dates.dateTimeFormat.format(event.date))</h3>
 			<p>Продажа совершена: @Dates.dateTimeFormat.format(sale.date)</p>
 			<h3>@("Сектор: " + Seat.sector(Sale.seats(sale).head).name)</h3>
