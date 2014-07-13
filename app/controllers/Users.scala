@@ -9,6 +9,7 @@ import play.api.data.validation.Constraints._
 import models.User
 import jp.t2v.lab.play2.auth.AuthElement
 import models.Permission
+import General.searchForm
 
 object Users extends Controller with AuthElement with AuthConfigImpl {
   val passMap = mapping(
@@ -21,12 +22,12 @@ object Users extends Controller with AuthElement with AuthConfigImpl {
     mapping(
       "id" -> longNumber,
       "name" -> nonEmptyText,
-      "fullName"->nonEmptyText,
+      "fullName" -> nonEmptyText,
       "edEv" -> boolean,
       "edS" -> boolean,
-      "edU" -> boolean) { (id, name,fullName, edEv, edS, edU) =>
+      "edU" -> boolean) { (id, name, fullName, edEv, edS, edU) =>
         User(id, name, fullName, "123456", edEv, edS, edU, true, true)
-      }(user => Some(user.id, user.name,user.fullName, user.canEditEvents, user.canEditSales, user.canEditUsers))
+      }(user => Some(user.id, user.name, user.fullName, user.canEditEvents, user.canEditSales, user.canEditUsers))
   }
 
   val passChangeForm = Form {
@@ -53,7 +54,7 @@ object Users extends Controller with AuthElement with AuthConfigImpl {
   def list = StackAction(AuthorityKey -> Permission.editUsers) { implicit request =>
     implicit val user = Some(loggedIn)
     val users = User.getAll
-    Ok(views.html.users.list(users))
+    Ok(views.html.users.list(users, searchForm))
   }
 
   def show(userID: Long) = StackAction(AuthorityKey -> Permission.editUsers) { implicit request =>
@@ -104,5 +105,27 @@ object Users extends Controller with AuthElement with AuthConfigImpl {
   def enableUser(userID: Long) = StackAction(AuthorityKey -> Permission.editUsers) { implicit request =>
     User.enableUser(userID)
     Redirect(routes.Users.show(userID)).flashing("success" -> "Пользователь разблокирован!")
+  }
+
+  def search = StackAction(AuthorityKey -> Permission.editUsers) { implicit request =>
+    implicit val user = Some(loggedIn)
+    searchForm.bindFromRequest.fold(
+      formWithErrors => Redirect(routes.Users.list),
+      searchVal => {
+        try {
+          val userID = searchVal.toLong
+          User.findByID(userID) match {
+            case None => Redirect(routes.Users.list).flashing("error" -> "Пользователь с таким ID не найден")
+            case Some(user) => Redirect(routes.Users.show(userID))
+          }
+        } catch {
+          case e: java.lang.NumberFormatException =>
+            val users = User.search(searchVal)
+            if (users.isEmpty)
+              Redirect(routes.Users.list).flashing("error" -> "По Вашему запросу ничего не найдено")
+            else
+              Ok(views.html.users.list(users, searchForm))
+        }
+      })
   }
 }

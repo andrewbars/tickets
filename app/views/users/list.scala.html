@@ -1,12 +1,23 @@
 @* list Template File *@
-@(users: List[User])(implicit flash:Flash, user:Option[User])
+@(users: List[User], searchForm:Form[String])(implicit flash:Flash, user:Option[User])
 
 @main("Список пользователей"){
+	
+	<div class="container">
+		@helper.form(action= routes.Users.search, 'role->"form", 'class->"form-horizontal"){
+			<div class="input-group">
+				<input type="search" class="form-control" name="valToSearch" id="valToSearch" placeholder="Поиск">
+				<span class="input-group-btn">
+					<button class="btn btn-default" type="submit">Поиск</button>
+				</span>
+			</div>
+		}
+	</div>	
 	<div class="container">
 		<div class="list-group">
 			@for(user<-users){
 				<h4 class="list-group-item-heading"><a href=@routes.Users.show(user.id:Long) class="list-group-item"> 
-					@(user.name), ID: @user.id @if(!user.isActive){
+					@(user.fullName), ID: @user.id, Login: @user.name @if(!user.isActive){
 					<p class="text-danger" style="display:inline; float:right">(Заблокирован!)</p>
 				}</a></h4>
 		

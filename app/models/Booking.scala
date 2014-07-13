@@ -29,6 +29,8 @@ case class Booking(
 
 object Booking {
 
+  def getAllQ = from(bookingsTable)(booking=>select(booking) orderBy(booking.eventID asc))
+  
   def getById(bookingID: Long) =
     inTransaction(bookingsTable.lookup(bookingID))
   def addNew(sitsMap: List[List[Int]], sectorID: Long, booking: Booking) = inTransaction {
@@ -49,7 +51,18 @@ object Booking {
   }
   def event(booking: Booking) = inTransaction(booking.event.single)
   def bookingsByNameQ(name: String) = bookingsTable.where(booking => booking.clientName like name)
-  def findByClientName(searchVal: String) = inTransaction(bookingsByNameQ(searchVal).toList)
+ 
+  
+  def findByClientName(searchVal: String) = inTransaction{
+    val searchWords = searchVal.split("\\s+")
+    val bookings = getAllQ.toList
+    bookings filter {booking=>
+      val clientNameSeparated = booking.clientName.split("\\s+")
+      searchWords forall (word=>clientNameSeparated exists(_ startsWith word))
+    }
+  }
+  
+  
   def redeemBooking(booking: Booking, sale: Sale) = inTransaction {
     salesTable.insert(sale)
     val seatsToUpdate = seats(booking) map (seat => seat.copy(sold = true, booked = false, bookingID = None, saleID = Some(sale.id)))

@@ -58,6 +58,7 @@ GET		/users/new						controllers.Users.newUser
 POST	/users/new						controllers.Users.saveUser
 GET		/users/changepassword			controllers.Users.changePassword
 POST	/users/changepassword			controllers.Users.setPassword
+POST	/user/search					controllers.Users.search
 GET		/users/:userID					controllers.Users.show(userID:Long)
 GET		/users/:userID/edit				controllers.Users.editUser(userID: Long)
 POST	/users/update					controllers.Users.updateUser

@@ -15,6 +15,7 @@ import Seats._
 import com.mysql.jdbc.NotImplemented
 import jp.t2v.lab.play2.auth.AuthElement
 import models.Permission
+import General.searchForm
 
 object Bookings extends Controller with AuthElement with AuthConfigImpl {
 
@@ -82,9 +83,6 @@ object Bookings extends Controller with AuthElement with AuthConfigImpl {
     }
   }
 
-  val searchForm = Form(mapping(
-    "valToSearch" -> nonEmptyText)(valToSearch => valToSearch)(valToSearch => Some(valToSearch)))
-
   def find = StackAction(AuthorityKey -> Permission.default) { implicit request =>
     implicit val user = Some(loggedIn)
     Ok(views.html.bookings.search(searchForm))
@@ -98,7 +96,7 @@ object Bookings extends Controller with AuthElement with AuthConfigImpl {
         try {
           val bookingID = searchVal.toLong
           Booking.getById(bookingID) match {
-            case None => Redirect(routes.Bookings.find).flashing("error" -> "Бронирование с таким ID найдено")
+            case None => Redirect(routes.Bookings.find).flashing("error" -> "Бронирование с таким ID не найдено")
             case Some(booking) => Redirect(routes.Bookings.show(booking.id))
           }
         } catch {

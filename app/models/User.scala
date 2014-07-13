@@ -99,4 +99,14 @@ object User {
       where(user.id === userID)
         set (user.isActive := true))
   }
+
+  def search(searchVal: String) = inTransaction {
+    val searchWords = searchVal split ("\\s+")
+    getAll filter { user =>
+      val userNameSeparated = user.fullName split ("\\s+")
+      searchWords forall (word =>
+        (userNameSeparated exists (_ startsWith word)) ||
+          (user.name startsWith word))
+    }
+  }
 }
