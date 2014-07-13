@@ -28,7 +28,7 @@ object Seats extends Controller with AuthElement with AuthConfigImpl {
     "prices" -> list(number))((names, prices) => (names zip prices).toMap)(priceMap =>
       Some((for (name <- Sector.sectorNames) yield (name, priceMap(name))).unzip)))
 
-  def setPrices(implicit eventID: Long) = StackAction(AuthorityKey->Permission.editEvent) { implicit request =>
+  def setPrices(implicit eventID: Long) = StackAction(AuthorityKey -> Permission.editEvent) { implicit request =>
     implicit val user = Some(loggedIn)
     Event.getSectors(eventID) match {
       case None => Redirect(routes.Events.list()).flashing("error" -> (Messages("events.notfound")))
@@ -37,7 +37,7 @@ object Seats extends Controller with AuthElement with AuthConfigImpl {
         Ok(views.html.events.prices(sectorPriceForm.fill(sectorPrices)))
     }
   }
-  def savePrices(implicit eventID: Long) = StackAction(AuthorityKey->Permission.editEvent) { implicit request =>
+  def savePrices(implicit eventID: Long) = StackAction(AuthorityKey -> Permission.editEvent) { implicit request =>
     implicit val user = Some(loggedIn)
     sectorPriceForm.bindFromRequest.fold(
       formWithErrors => Ok(views.html.events.prices(formWithErrors)),
@@ -55,14 +55,14 @@ object Seats extends Controller with AuthElement with AuthConfigImpl {
       "num" -> number)((event, sector, row, num) => (event, sector, row, num))(tup => Some(tup)))
 
   val seatCheckboxMapping = mapping(
-    "rows" -> list(rowMap))(rows => rows)(rows => Some(rows))
+    "rows" -> list(rowMap))(rows => rows)(rows => Some(rows)).verifying("Выберете хотя бы одно место!", _ exists (_.nonEmpty))
 
-  def checkSeat = StackAction(AuthorityKey->Permission.default) { implicit request =>
+  def checkSeat = StackAction(AuthorityKey -> Permission.default) { implicit request =>
     implicit val user = Some(loggedIn)
     Ok(views.html.seats.seatcheck(seatCheckForm))
   }
 
-  def checkSeatProc = StackAction(AuthorityKey->Permission.default) { implicit request =>
+  def checkSeatProc = StackAction(AuthorityKey -> Permission.default) { implicit request =>
     implicit val user = Some(loggedIn)
     seatCheckForm.bindFromRequest.fold(
       formWithErrors => Ok(views.html.seats.seatcheck(formWithErrors)),

@@ -13,7 +13,11 @@
 			<dl class="dl-horizontal">
 				<dt>Проданные места:</dt>
 				@for(seat<-Sale.seats(sale)){
-					<dd>@("Ряд: "+seat.rowNumber+", место: "+ seat.num)</dd>
+					<dd>@("Ряд: "+seat.rowNumber+", место: "+ seat.num)
+					@if(models.Permission.editSales(user.get)){
+						<a href = "@routes.Sales.excludeOne(seat.id, sale.id)">Исключить</a>
+					}
+					</dd>
 				}
 			</dl>
 			<h3>@("Итого к оплате: " + sale.price*Sale.seats(sale).length+" грн.")</h3>
@@ -21,14 +25,22 @@
 			@if(Permission.editUsers(user.get)){<a href = "@routes.Users.show(Sale.user(sale).id)">} 
 			@Sale.user(sale).fullName</p>@if(Permission.editUsers(user.get)){</a>}
 			@if(sale.confirmed){
-				<p><a class="btn btn-primary btn-lg active" role="button" href="@routes.Events.show(event.id)">Вернуться к событию</a></p>
+				<p><a class="btn btn-primary btn-lg active" role="button" href="@routes.Events.show(event.id)">
+					Вернуться к событию
+				</a>
+				@if(models.Permission.editSales(user.get)){
+					<a class="btn btn-danger btn-lg active" role="button" href="@routes.Sales.cancelSale(sale.id)">
+						Отменить продажу
+					</a>
+				}
+				</p>
 			}else{
 				<p>
 					<a class="btn btn-success btn-lg active" role="button" href="@routes.Sales.confirmSale(sale.id)">
-					Подтвердить
+						Подтвердить
 					</a>
 					<a class="btn btn-danger btn-lg active" role="button" href="@routes.Sales.revertSale(sale.id)">
-					Отмена
+						Отмена
 					</a>					
 				</p>
 			}	

@@ -32,6 +32,8 @@ POST	/events/:eventID/:sectorID/sale	controllers.Sales.saveSale(sectorID:Long, e
 GET		/sales/:saleID					controllers.Sales.show(saleID: Long)
 GET		/sales/:saleID/confirm			controllers.Sales.confirmSale(saleID: Long)
 GET		/sales/:saleID/revert			controllers.Sales.revertSale(saleID: Long)
+GET		/sales/:saleID/cancel			controllers.Sales.cancelSale(saleID:Long)
+GET		/sales/:saleID/exclude/:seatID	controllers.Sales.excludeOne(seatID:Long, saleID:Long)
 
 #Поиск брони
 GET		/bookings/search				controllers.Bookings.find

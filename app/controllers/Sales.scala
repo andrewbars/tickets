@@ -19,10 +19,8 @@ import models.Permission
 object Sales extends Controller with AuthElement with AuthConfigImpl {
 
   val saleForm = Form(
-	mapping(
-		"seats"->seatCheckboxMapping
-	)(seats=>seats)(seats=>Some(seats))
-  )
+    mapping(
+      "seats" -> seatCheckboxMapping)(seats => seats)(seats => Some(seats)))
 
   def newSale(sectorID: Long, eventID: Long) = StackAction(AuthorityKey -> Permission.default) { implicit request =>
     implicit val user = Some(loggedIn)
@@ -55,8 +53,27 @@ object Sales extends Controller with AuthElement with AuthConfigImpl {
   }
   def revertSale(saleID: Long) = StackAction(AuthorityKey -> Permission.default) { implicit request =>
     val sale = Sale.getByID(saleID).get
+    if (!sale.confirmed) {
+      Sale.revertSale(sale)
+      Redirect(routes.Events.show(sale.eventID)).flashing("info" -> "Продажа отменена!")
+    } else
+      Redirect(routes.Sales.show(sale.id)).flashing("error" -> "Данная продажа уже была подтверждена!")
+  }
+
+  def cancelSale(saleID: Long) = StackAction(AuthorityKey -> Permission.editSales) { implicit request =>
+    val sale = Sale.getByID(saleID).get
     Sale.revertSale(sale)
-    Redirect(routes.Events.show(sale.eventID)).flashing("info" -> "Продажа отменена!")
+    Redirect(routes.Events.show(Sale.event(sale).id)).flashing("success" -> "Продажа отменена!")
+  }
+
+  def excludeOne(seatID: Long, saleID: Long) = StackAction(AuthorityKey -> Permission.editSales) { implicit request =>
+    Seat.deleteOne(seatID)
+    val sale = Sale.getByID(saleID).get
+    if (Sale.seats(sale).isEmpty) {
+      Sale.revertSale(sale)
+      Redirect(routes.Events.show(Sale.event(sale).id)).flashing("success" -> "Продажа отменена!")
+    } else
+      Redirect(routes.Sales.show(sale.id)).flashing("success" -> "Выбранное место исключено")
   }
   def show(saleID: Long) = StackAction(AuthorityKey -> Permission.default) { implicit request =>
     implicit val user = Some(loggedIn)
