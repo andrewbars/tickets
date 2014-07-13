@@ -21,11 +21,12 @@ object Users extends Controller with AuthElement with AuthConfigImpl {
     mapping(
       "id" -> longNumber,
       "name" -> nonEmptyText,
+      "fullName"->nonEmptyText,
       "edEv" -> boolean,
       "edS" -> boolean,
-      "edU" -> boolean) { (id, name, edEv, edS, edU) =>
-        User(id, name, "123456", edEv, edS, edU, true, true)
-      }(user => Some(user.id, user.name, user.canEditEvents, user.canEditSales, user.canEditUsers))
+      "edU" -> boolean) { (id, name,fullName, edEv, edS, edU) =>
+        User(id, name, fullName, "123456", edEv, edS, edU, true, true)
+      }(user => Some(user.id, user.name,user.fullName, user.canEditEvents, user.canEditSales, user.canEditUsers))
   }
 
   val passChangeForm = Form {

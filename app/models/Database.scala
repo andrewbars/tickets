@@ -25,4 +25,6 @@ object Database extends Schema {
   val salesToSeats = oneToManyRelation(salesTable, sitsTable).via((sale,sit)=>sale.id===sit.saleID)
   val eventsToBookings=oneToManyRelation(eventsTable, bookingsTable).via(((ev,b)=>ev.id===b.eventID))
   val bookingsToSeats=oneToManyRelation(bookingsTable, sitsTable).via((b,s)=>b.id===s.bookingID)
+  val usersToSales = oneToManyRelation(usersTable, salesTable).via((u, s)=>u.id===s.userID)
+  val usersToBookings = oneToManyRelation(usersTable, bookingsTable).via((u, b)=>u.id===b.userID)
 }

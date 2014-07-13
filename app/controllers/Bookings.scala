@@ -42,7 +42,7 @@ object Bookings extends Controller with AuthElement with AuthConfigImpl {
           Ok(views.html.bookings.booking(sec, eventID, Sector.orderedSeatsInSector(sec))(formWithErrors))
         },
       sectorMap => {
-        val booking = Booking(0, eventID, new Timestamp(new Date().getTime()), sectorMap._2, sectorMap._1, sec.sitPrice, false)
+        val booking = Booking(0, eventID, new Timestamp(new Date().getTime()), sectorMap._2, sectorMap._1, sec.sitPrice, false, user.get.id)
         Booking.addNew(sectorMap._3, sectorID, booking)
         Redirect(routes.Bookings.show(booking.id)).flashing("info" -> "Проверьте и подтвердите бронирование")
       })
@@ -65,7 +65,8 @@ object Bookings extends Controller with AuthElement with AuthConfigImpl {
       Booking.event(booking).id,
       new Timestamp(Calendar.getInstance().getTimeInMillis()),
       booking.price,
-      true)
+      true,
+      booking.userID)
     Booking.redeemBooking(booking, sale)
     Redirect(routes.Sales.show(sale.id)).flashing("success" -> "Выкуп продажи успешно подтвержден!")
   }

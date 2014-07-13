@@ -21,6 +21,9 @@
 					</dd>
 				}
 			</dl>
+			<p>Бронирование зарегистрировал: 
+			@if(Permission.editUsers(user.get)){<a href = "@routes.Users.show(Booking.user(booking).id)">} 
+			@Booking.user(booking).fullName</p>@if(Permission.editUsers(user.get)){</a>}
 			@if(booking.confirmed){
 				<p>
 					<a class="btn btn-primary btn-lg active" role="button" href="@routes.Events.show(event.id)">

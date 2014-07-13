@@ -3,8 +3,12 @@
 
 		
 		@helper.input(userForm("name"), '_label -> "Логин", '_class ->"form-group") { (id, name, value, args) =>
-	    <input type="text" value="@value"  name="@name" id="@id" @toHtmlArgs(args) class="form-control" placeholder="Введите имя пользователя">
+	    <input type="text" value="@value"  name="@name" id="@id" @toHtmlArgs(args) class="form-control" placeholder="Введите логин пользователя">
 		}
+		
+		@helper.input(userForm("fullName"), '_label -> "Полное имя", '_class ->"form-group") { (id, name, value, args) =>
+	    <input type="text" value="@value"  name="@name" id="@id" @toHtmlArgs(args) class="form-control" placeholder="Введите имя пользователя">
+		}		
 		
 		<div class="checkbox">
 			<lavel>

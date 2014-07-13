@@ -10,15 +10,19 @@
 				@if(user.isActive){
 					<li><a href="@routes.Users.disableUser(user.id)" class="btn btn-danger active" role="button">Заблокировать</a></li>
 				}else{
-					<li><a href="@routes.Users.enableUser(user.id)" class="btn btn-danger active" role="button">Разблокировать</a></li>
+					<li><a href="@routes.Users.enableUser(user.id)" class="btn btn-success active" role="button">Разблокировать</a></li>
 				}
 			</ul>
 		</div>
 		<div class="jumbotron">
-			<h1>@("Пользователь " + user.name)</h1>
-			<p> <strong>@if(models.Permission.editEvent(user)){Может}else{Не может}</strong> редактировать события
-			<p> <strong>@if(models.Permission.editSales(user)){Может}else{Не может}</strong> редактировать продажи
-			<p> <strong>@if(models.Permission.editUsers(user)){Может}else{Не может}</strong> редактировать пользователей
+			<h3>Пользователь <strong>@(user.name)</strong></h3>
+			<h4>Полное имя @(user.fullName)</h4>
+			<h4>@("ID "+user.id)</h4>
+			<div class="well well-sm">
+				<p> <strong>@if(models.Permission.editEvent(user)){Может}else{Не может}</strong> редактировать события
+				<p> <strong>@if(models.Permission.editSales(user)){Может}else{Не может}</strong> редактировать продажи
+				<p> <strong>@if(models.Permission.editUsers(user)){Может}else{Не может}</strong> редактировать пользователей
+			</div>
 		</div>
 }
 

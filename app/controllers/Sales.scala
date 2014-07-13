@@ -39,7 +39,7 @@ object Sales extends Controller with AuthElement with AuthConfigImpl {
           Ok(views.html.sales.sale(sec, eventID, Sector.orderedSeatsInSector(sec))(formWithErrors))
         },
       sectorMap => {
-        val sale = Sale(0, eventID, new Timestamp(new Date().getTime()), sec.sitPrice, false)
+        val sale = Sale(0, eventID, new Timestamp(new Date().getTime()), sec.sitPrice, false, user.get.id)
         Sale.addNew(sectorMap, sectorID, sale)
         Redirect(routes.Sales.show(sale.id)).flashing("info" -> "Проверьте и подтвердите продажу")
       })

@@ -28,13 +28,17 @@ object Permission {
 case class User(
   id: Long,
   name: String,
+  fullName: String,
   password: String,
   canEditEvents: Boolean,
   canEditSales: Boolean,
   canEditUsers: Boolean,
   isNew: Boolean,
   isActive: Boolean) extends KeyedEntity[Long] {
-
+  lazy val sales: OneToMany[Sale] =
+    usersToSales.left(this)
+  lazy val bookings: OneToMany[Booking] =
+    usersToBookings.left(this)
 }
 
 object User {
@@ -51,11 +55,8 @@ object User {
   def findByID(id: Long) = inTransaction {
     usersTable.lookup(id)
   }
-
-  def usersByNameQ(name: String) = usersTable.where(_.name like name)
-
   def findByName(name: String) = inTransaction {
-    usersByNameQ(name).headOption
+    allQ.toList find (_.name equals name)
   }
 
   def auth(name: String, pass: String): Option[User] = inTransaction {
@@ -79,7 +80,8 @@ object User {
           user.isNew := false))
   }
   def updateUser(user: User) = inTransaction {
-    usersTable.update(user copy (password = findByID(user.id).get.password, isNew = false))
+    val oldUser = findByID(user.id).get
+    usersTable.update(user copy (password = oldUser.password, isNew = oldUser.isNew, isActive = oldUser.isActive))
   }
   def resetPassword(userID: Long) = inTransaction {
     update(usersTable)(user =>

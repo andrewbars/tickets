@@ -17,6 +17,9 @@
 				}
 			</dl>
 			<h3>@("Итого к оплате: " + sale.price*Sale.seats(sale).length+" грн.")</h3>
+			<p>Продажу совершил: 
+			@if(Permission.editUsers(user.get)){<a href = "@routes.Users.show(Sale.user(sale).id)">} 
+			@Sale.user(sale).fullName</p>@if(Permission.editUsers(user.get)){</a>}
 			@if(sale.confirmed){
 				<p><a class="btn btn-primary btn-lg active" role="button" href="@routes.Events.show(event.id)">Вернуться к событию</a></p>
 			}else{

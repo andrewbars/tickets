@@ -15,11 +15,14 @@ case class Sale(
   eventID: Long,
   date: Timestamp,
   price: Int,
-  confirmed: Boolean) extends KeyedEntity[Long] {
+  confirmed: Boolean,
+  userID: Long) extends KeyedEntity[Long] {
   lazy val event: ManyToOne[Event] =
     Database.eventsToSells.right(Sale.this)
   lazy val sits: OneToMany[Seat] =
     salesToSeats.left(Sale.this)
+  lazy val user: ManyToOne[User] =
+    usersToSales.right(this)
 }
 
 object Sale {
@@ -30,7 +33,7 @@ object Sale {
     val seatstoInsert = (for {
       row <- sitsMap.zipWithIndex
       num <- row._1
-    } yield Seat(0, sectorID, row._2 + 1, num, true,false, Some(sale.id),None))
+    } yield Seat(0, sectorID, row._2 + 1, num, true, false, Some(sale.id), None))
     Seat.insert(seatstoInsert)
   }
 
@@ -49,10 +52,14 @@ object Sale {
   }
   def deleteByEventID(eventID: Long) = inTransaction(salesTable.deleteWhere(_.eventID === eventID))
   def confirmSale(sale: Sale) = inTransaction(salesTable.update(sale.copy(confirmed = true)))
-  def revertSale(sale: Sale) = inTransaction{
+  def revertSale(sale: Sale) = inTransaction {
     if (!sale.confirmed) {
       sitsTable.delete(sale.sits)
       salesTable.deleteWhere(_.id === sale.id)
     }
+  }
+  
+  def user(sale:Sale) = inTransaction{
+    sale.user.single
   }
 }

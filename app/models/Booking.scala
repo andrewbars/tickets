@@ -17,11 +17,14 @@ case class Booking(
   clientName: String,
   expDate: Timestamp,
   price: Int,
-  confirmed: Boolean) extends KeyedEntity[Long] {
+  confirmed: Boolean,
+  userID: Long) extends KeyedEntity[Long] {
   lazy val seats: OneToMany[Seat] =
     bookingsToSeats.left(this)
   lazy val event: ManyToOne[Event] =
     eventsToBookings.right(this)
+  lazy val user: ManyToOne[User] =
+    usersToBookings.right(this)
 }
 
 object Booking {
@@ -55,9 +58,9 @@ object Booking {
   }
 
   def expire = inTransaction {
-   val bookings = bookingsTable.where(booking =>
+    val bookings = bookingsTable.where(booking =>
       booking.expDate < new Timestamp(Calendar.getInstance().getTimeInMillis()))
-/*  TODO Why this thing doesn`t wokk?!!!!
+    /*  TODO Why this thing doesn`t wokk?!!!!
     val seats =from(bookingsTable,sitsTable)((booking, seat)=>
     	where(booking.expDate < new Timestamp(Calendar.getInstance().getTimeInMillis()) and seat.bookingID===booking.id)
     	select(seat)
@@ -65,7 +68,11 @@ object Booking {
     
     sitsTable.delete(seats)
     * */
-    for(booking<-bookings)(booking.seats.deleteAll)
+    for (booking <- bookings) (booking.seats.deleteAll)
     bookingsTable.delete(bookings)
+  }
+  
+  def user(booking:Booking) = inTransaction{
+    booking.user.single
   }
 }
