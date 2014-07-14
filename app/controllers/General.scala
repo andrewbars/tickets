@@ -23,7 +23,7 @@ object General extends Controller with AuthElement with AuthConfigImpl {
       if (!user.isActive)
         Redirect(routes.Application.login).flashing("error" -> "Данный пользователь заблокирован администратором")
       else
-        Redirect(routes.Events.list(false))
+        Redirect(routes.Events.list)
     }
   }
 }

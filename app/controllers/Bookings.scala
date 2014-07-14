@@ -114,7 +114,7 @@ object Bookings extends Controller with AuthElement with AuthConfigImpl {
     val booking = Booking.getById(bookingID).get
     if (Booking.seats(booking).isEmpty) {
       Booking.revertBooking(booking)
-      Redirect(routes.Events.list(false)).flashing("success" -> "Бронирование отменено")
+      Redirect(routes.Events.list).flashing("success" -> "Бронирование отменено")
     } else {
       Redirect(routes.Bookings.show(bookingID)).flashing("success" -> "Выбранное место исключено")
     }

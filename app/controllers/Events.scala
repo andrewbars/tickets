@@ -17,7 +17,7 @@ import models.Permission
 object Events extends Controller with AuthElement with AuthConfigImpl {
   def isArchive(event: Event) = Calendar.getInstance().getTime().after(event.date)
 
-  def list(archive: Boolean = false) = StackAction(AuthorityKey -> Permission.default) { implicit request =>
+  def list = StackAction(AuthorityKey -> Permission.default) { implicit request =>
     implicit val user = Some(loggedIn)
     val events = Event.getAll.dropWhile(isArchive(_))
     Ok(views.html.events.list(events))

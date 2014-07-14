@@ -47,7 +47,7 @@ object Users extends Controller with AuthElement with AuthConfigImpl {
       formWithErrors => Ok(views.html.users.addNew(formWithErrors)),
       user => {
         User.addNew(user)
-        Redirect(routes.Events.list(false)).flashing("success" -> ("Новый пользователь " + user.name + " успешно создан!"))
+        Redirect(routes.Events.list).flashing("success" -> ("Новый пользователь " + user.name + " успешно создан!"))
       })
   }
 
@@ -75,7 +75,7 @@ object Users extends Controller with AuthElement with AuthConfigImpl {
       formWithErrors => Ok(views.html.users.changePass(formWithErrors)),
       newPass => if (User.checkPass(newPass._1, user.get.id)) {
         User.changePassword(newPass._2.get, user.get.id)
-        Redirect(routes.Events.list(false)).flashing("success" -> "Пароль успешно изменен")
+        Redirect(routes.Events.list).flashing("success" -> "Пароль успешно изменен")
       } else
         Redirect(routes.Users.changePassword).flashing("error" -> "Введен неправильный пароль! Попробуйте еще раз"))
   }

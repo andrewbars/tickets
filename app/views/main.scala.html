@@ -24,8 +24,8 @@
 		        		<li class="dropdown">
 		        		<a href="#" class="dropdown-toggle" data-toggle="dropdown">@Messages("events")<b class="caret"></b></a>
 		        			<ul class="dropdown-menu">
-		        				<li><a href="@routes.Events.list(false)">@Messages("events.active")</a></li>
-		        				<li><a href="@routes.Events.list(true)">@Messages("events.archive")</a></li>
+		        				<li><a href="@routes.Events.list">@Messages("events.active")</a></li>
+		        				<li><a href="@routes.Events.archiveList">@Messages("events.archive")</a></li>
 		        				@if(models.Permission.editEvent(user.get)){
 		        					<li><a href="@routes.Events.addNew">@Messages("add")</a></li>}
 		        			</ul>

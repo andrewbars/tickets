@@ -27,7 +27,7 @@
 					    	<ul class="dropdown-menu scrollable-menu">
 					    		<li><a href="@routes.Events.show(event.id)">Показать схему поля</a></li>
 					    		@for(sec<-Event.getSectors(event.id).get){
-					    			<li><a href="@routes.Events.show(event.id, sec.id)">@sec.name</a></li>
+					    			<li><a href="@routes.Events.showWithSector(event.id, sec.id)">@sec.name</a></li>
 					    		}
 					        </ul>
 					</span>
