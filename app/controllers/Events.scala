@@ -14,24 +14,37 @@ import Dates._
 import jp.t2v.lab.play2.auth.AuthElement
 import models.Permission
 
-
 object Events extends Controller with AuthElement with AuthConfigImpl {
   def isArchive(event: Event) = Calendar.getInstance().getTime().after(event.date)
 
-  def list(archive: Boolean = false) = StackAction(AuthorityKey->Permission.default) {
-    implicit request =>
-      implicit val user = Some(loggedIn)
-      val events = if (archive)
-        Event.getAll.takeWhile(isArchive(_))
-      else
-        Event.getAll.dropWhile(isArchive(_))
-      Ok(views.html.events.list(events))
+  def list(archive: Boolean = false) = StackAction(AuthorityKey -> Permission.default) { implicit request =>
+    implicit val user = Some(loggedIn)
+    val events = Event.getAll.dropWhile(isArchive(_))
+    Ok(views.html.events.list(events))
   }
-  def show(id: Long, sectorID: Long) = StackAction(AuthorityKey->Permission.default) {
+
+  def archiveList = StackAction(AuthorityKey -> Permission.default) { implicit request =>
+    implicit val user = Some(loggedIn)
+    val events = Event.getAll.takeWhile(isArchive(_))
+    Ok(views.html.events.list(events))
+  }
+  def show(id: Long) = StackAction(AuthorityKey -> Permission.default) {
     implicit request =>
       implicit val user = Some(loggedIn)
-      val e = Event.getById(id)
-      e match {
+      val event = Event.getById(id)
+      event match {
+        case None => Redirect(routes.Events.list()).flashing("error" -> (Messages("events.notfound")))
+        case Some(event) => {
+          Ok(views.html.events.details(event, None))
+        }
+      }
+  }
+
+  def showWithSector(id: Long, sectorID: Long) = StackAction(AuthorityKey -> Permission.default) {
+    implicit request =>
+      implicit val user = Some(loggedIn)
+      val event = Event.getById(id)
+      event match {
         case None => Redirect(routes.Events.list()).flashing("error" -> (Messages("events.notfound")))
         case Some(event) => {
           val sec = Sector.getByID(sectorID)
@@ -39,20 +52,21 @@ object Events extends Controller with AuthElement with AuthConfigImpl {
         }
       }
   }
-  def addNew = StackAction(AuthorityKey->Permission.editEvent) {
+
+  def addNew = StackAction(AuthorityKey -> Permission.editEvent) {
     implicit request =>
       implicit val user = Some(loggedIn)
       Ok(views.html.events.insert(eventForm))
   }
-  def remove(id: Long) = StackAction(AuthorityKey->Permission.editEvent) {implicit request =>
-      implicit val user = Some(loggedIn)
-      Event.getById(id) match {
-        case None => Redirect(routes.Events.list()).flashing("error" -> (Messages("events.notfound")))
-        case Some(x) => {
-          Event.removeById(id)
-          Redirect(routes.Events.list()).flashing("success" -> "Событие успешно удалено!")
-        }
+  def remove(id: Long) = StackAction(AuthorityKey -> Permission.editEvent) { implicit request =>
+    implicit val user = Some(loggedIn)
+    Event.getById(id) match {
+      case None => Redirect(routes.Events.list()).flashing("error" -> (Messages("events.notfound")))
+      case Some(x) => {
+        Event.removeById(id)
+        Redirect(routes.Events.list()).flashing("success" -> "Событие успешно удалено!")
       }
+    }
   }
 
   val eventForm = Form {
@@ -63,7 +77,7 @@ object Events extends Controller with AuthElement with AuthConfigImpl {
       "dscr" -> text.verifying(maxLength(500)))(Event.apply)(Event.unapply)
   }
 
-  def insert = StackAction(AuthorityKey->Permission.editEvent) { implicit request =>
+  def insert = StackAction(AuthorityKey -> Permission.editEvent) { implicit request =>
     implicit val user = Some(loggedIn)
     eventForm.bindFromRequest.fold(
       formWithErrors => Ok(views.html.events.insert(formWithErrors)).flashing("error" -> "Исправьте ошибки в форме"),
@@ -74,7 +88,7 @@ object Events extends Controller with AuthElement with AuthConfigImpl {
       })
   }
 
-  def edit(id: Long) = StackAction(AuthorityKey->Permission.editEvent) {
+  def edit(id: Long) = StackAction(AuthorityKey -> Permission.editEvent) {
     implicit request =>
       implicit val user = Some(loggedIn)
       val event = Event.getById(id)
@@ -83,21 +97,21 @@ object Events extends Controller with AuthElement with AuthConfigImpl {
         case Some(x) => Ok(views.html.events.edit(eventForm.fill(x)))
       }
   }
-  def update = StackAction(AuthorityKey->Permission.editEvent) {implicit request =>
-    implicit val user = Some(loggedIn)  
+  def update = StackAction(AuthorityKey -> Permission.editEvent) { implicit request =>
+    implicit val user = Some(loggedIn)
     eventForm.bindFromRequest.fold(
-        formWithErrors => Ok(views.html.events.edit(formWithErrors)).flashing("error" -> "Исправьте ошибки в форме"),
-        success = {
-          event =>
-            {
-              Event.getById(event.id) match {
-                case None => Redirect(routes.Events.list()).flashing("error" -> (Messages("events.notfound")))
-                case Some(x) => {
-                  models.Event.update(event)
-                  Redirect(routes.Events.show(event.id)).flashing("success" -> "Сохранено!")
-                }
+      formWithErrors => Ok(views.html.events.edit(formWithErrors)).flashing("error" -> "Исправьте ошибки в форме"),
+      success = {
+        event =>
+          {
+            Event.getById(event.id) match {
+              case None => Redirect(routes.Events.list()).flashing("error" -> (Messages("events.notfound")))
+              case Some(x) => {
+                models.Event.update(event)
+                Redirect(routes.Events.show(event.id)).flashing("success" -> "Сохранено!")
               }
             }
-        })
+          }
+      })
   }
 }

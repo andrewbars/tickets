@@ -13,12 +13,14 @@ GET		/logged						controllers.General.logged
 GET     /assets/*file               controllers.Assets.at(path="/public", file)
 
 #List of events page
-GET		/events/					controllers.Events.list(archive:Boolean?=false)
+GET		/events						controllers.Events.list
+GET		/events/archive				controllers.Events.archiveList
 #Добавление нового события
 GET		/events/add					controllers.Events.addNew
 POST	/events/add					controllers.Events.insert
 
-GET		/events/:id					controllers.Events.show(id:Long, sectorID:Long?=(-5))
+GET		/events/:id					controllers.Events.show(id:Long)
+GET		/events/:eventID/sector/:sectorID controllers.Events.showWithSector(eventID: Long, sectorID: Long)
 GET 	/events/:id/remove			controllers.Events.remove(id:Long)
 GET 	/events/:id/edit			controllers.Events.edit(id: Long)
 POST	/events/edit				controllers.Events.update
@@ -27,8 +29,8 @@ GET		/events/:id/edit/prices		controllers.Seats.setPrices(id: Long)
 POST	/events/:id/edit/prices		controllers.Seats.savePrices(id: Long)
 #Новая продажа
 #TODO поменять пути на вида /events/:id/sectors/:id
-GET		/events/:eventID/:sectorID/sale	controllers.Sales.newSale(sectorID:Long, eventID:Long)
-POST	/events/:eventID/:sectorID/sale	controllers.Sales.saveSale(sectorID:Long, eventID:Long)
+GET		/events/:eventID/sector/:sectorID/sale	controllers.Sales.newSale(sectorID:Long, eventID:Long)
+POST	/events/:eventID/sector/:sectorID/sale	controllers.Sales.saveSale(sectorID:Long, eventID:Long)
 GET		/sales/:saleID					controllers.Sales.show(saleID: Long)
 GET		/sales/:saleID/confirm			controllers.Sales.confirmSale(saleID: Long)
 GET		/sales/:saleID/revert			controllers.Sales.revertSale(saleID: Long)
@@ -40,8 +42,8 @@ GET		/bookings/search				controllers.Bookings.find
 POST	/bookings/search				controllers.Bookings.findProc
 
 #Бронирование
-GET 	/events/:eventID/:sectorID/book	controllers.Bookings.newBooking(sectorID: Long, eventID: Long)
-POST	/events/:eventID/:sectorID/book	controllers.Bookings.saveBooking(sectorID: Long, eventID: Long)
+GET 	/events/:eventID/sector/:sectorID/book	controllers.Bookings.newBooking(sectorID: Long, eventID: Long)
+POST	/events/:eventID/sector/:sectorID/book	controllers.Bookings.saveBooking(sectorID: Long, eventID: Long)
 GET		/bookings/:bookingID			controllers.Bookings.show(bookingID: Long)
 GET		/bookings/:bookingID/confirm	controllers.Bookings.confirmBooking(bookingID: Long)
 GET		/bookings/:bookingID/revert		controllers.Bookings.revertBooking(bookingID: Long)
