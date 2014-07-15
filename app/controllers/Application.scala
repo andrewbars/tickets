@@ -11,8 +11,9 @@ import play.api.data.Forms._
 import play.api.data.validation.Constraints._
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
+import jp.t2v.lab.play2.auth.OptionalAuthElement
 
-object Application extends Controller with AuthConfigImpl with LoginLogout {
+object Application extends Controller with AuthConfigImpl with LoginLogout with OptionalAuthElement {
 
   def index = Action {
     Redirect(routes.Application.login)
@@ -23,8 +24,12 @@ object Application extends Controller with AuthConfigImpl with LoginLogout {
     .verifying("Введены неправильный логин или пароль", user => user.isDefined)
   }
 
-  def login = Action { implicit request =>
-    Ok(views.html.login(loginForm))
+  def login = StackAction { implicit request =>
+    loggedIn match{
+      case None=>Ok(views.html.login(loginForm))
+      case Some(user)=>Redirect(routes.Events.list)
+    }
+    
   }
 
   def logout = Action.async { implicit request =>

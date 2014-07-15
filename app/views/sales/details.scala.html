@@ -23,7 +23,12 @@
 			<h3>@("Итого к оплате: " + sale.price*Sale.seats(sale).length+" грн.")</h3>
 			<p>Продажу совершил: 
 			@if(Permission.editUsers(user.get)){<a href = "@routes.Users.show(Sale.user(sale).id)">} 
-			@Sale.user(sale).fullName</p>@if(Permission.editUsers(user.get)){</a>}
+			@Sale.user(sale).fullName @if(Permission.editUsers(user.get)){</a>}</p>
+			@if(sale.fromBooking){
+			<p class="bg-info">Данная продажа является результатом подтвержения брони. Первоначальное бронирование осуществил: 
+			@if(Permission.editUsers(user.get)){<a href = "@routes.Users.show(Sale.user(sale).id)">} 
+			@User.findByID(sale.bookUserID.get).get.fullName@if(Permission.editUsers(user.get)){</a>}</p>			
+			}
 			@if(sale.confirmed){
 				<p><a class="btn btn-primary btn-lg active" role="button" href="@routes.Events.show(event.id)">
 					Вернуться к событию

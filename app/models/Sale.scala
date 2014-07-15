@@ -16,7 +16,9 @@ case class Sale(
   date: Timestamp,
   price: Int,
   confirmed: Boolean,
-  userID: Long) extends KeyedEntity[Long] {
+  userID: Long,
+  fromBooking:Boolean,
+  bookUserID:Option[Long]) extends KeyedEntity[Long] {
   lazy val event: ManyToOne[Event] =
     Database.eventsToSells.right(Sale.this)
   lazy val sits: OneToMany[Seat] =

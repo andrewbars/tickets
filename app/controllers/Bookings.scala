@@ -62,14 +62,16 @@ object Bookings extends Controller with AuthElement with AuthConfigImpl {
     Redirect(routes.Events.show(booking.eventID)).flashing("info" -> "Бронирование отменено!")
   }
 
-  def redeemBooking(bookingID: Long) = Action { implicit request =>
+  def redeemBooking(bookingID: Long) = StackAction(AuthorityKey -> Permission.default) { implicit request =>
     val booking = Booking.getById(bookingID).get
     val sale = Sale(0,
       Booking.event(booking).id,
       new Timestamp(Calendar.getInstance().getTimeInMillis()),
       booking.price,
       true,
-      booking.userID)
+      loggedIn.id,
+      true,
+      Some(booking.userID))
     Booking.redeemBooking(booking, sale)
     Redirect(routes.Sales.show(sale.id)).flashing("success" -> "Выкуп продажи успешно подтвержден!")
   }
