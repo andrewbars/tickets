@@ -30,7 +30,9 @@ object Bookings extends Controller with AuthElement with AuthConfigImpl {
     sector match {
       case None => Redirect(routes.Events.show(eventID)).flashing("error" -> "Задан неверный номер сектора")
       case Some(sec) =>
-        Ok(views.html.bookings.booking(sec, eventID, Sector.orderedSeatsInSector(sec))(bookingForm))
+        val event = Sector.event(sec)
+        val expTime = new Timestamp(event.date.getTime()-event.bookingExpTime*60*1000)
+        Ok(views.html.bookings.booking(sec, eventID, Sector.orderedSeatsInSector(sec))(bookingForm.fill((expTime,"", Nil))))
     }
   }
 

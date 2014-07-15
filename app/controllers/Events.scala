@@ -74,6 +74,7 @@ object Events extends Controller with AuthElement with AuthConfigImpl {
       "id" -> longNumber,
       "name" -> nonEmptyText.verifying(maxLength(100)),
       "date" -> dateTimeMapping.verifying("Дата должна быть больше текущей", Calendar.getInstance().getTime().before(_)),
+      "bookingExpTime" -> number,
       "dscr" -> text.verifying(maxLength(500)))(Event.apply)(Event.unapply)
   }
 

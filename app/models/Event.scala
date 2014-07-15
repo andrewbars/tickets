@@ -11,6 +11,7 @@ case class Event(
   id: Long,
   name: String,
   date: Timestamp,
+  bookingExpTime:Int,
   dscr: String) extends KeyedEntity[Long] {
   lazy val sectors: OneToMany[Sector] =
     Database.eventsToSectors.left(this)
