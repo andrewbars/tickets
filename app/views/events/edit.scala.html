@@ -6,7 +6,7 @@
 	<div class="container">
 		@helper.form(action= routes.Events.update, 'role->"form", 'class->"form-horizontal"){
 		@helper.input(ev("id"), '_class ->"form-group"){ (id, name, value, args) =>
-	    <input type="text" value="@value" name="@name" id="@id" @toHtmlArgs(args) class="form-control" readonly>
+	    <input type="text" value="@value" name="@name" id="@id" @toHtmlArgs(args) class="form-control form-narrow" readonly>
 		}
 		@views.html.events.eventForm(ev)
 			<button type="submit" class="bth btn-primary btn-lg">@Messages("save")</button>

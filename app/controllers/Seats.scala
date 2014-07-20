@@ -23,6 +23,9 @@ object Seats extends Controller with AuthElement with AuthConfigImpl {
         if s._1
       } yield (s._2 + 1))(numList => Some((for (n <- (1 to 50)) yield numList contains n).toList))
 
+  val seatCheckboxMapping = mapping(
+    "rows" -> list(rowMap))(rows => rows)(rows => Some(rows)).verifying("Выберете хотя бы одно место!", _ exists (_.nonEmpty))
+
   val sectorPriceForm = Form(mapping(
     "names" -> list(text),
     "prices" -> list(number))((names, prices) => (names zip prices).toMap)(priceMap =>
@@ -47,36 +50,4 @@ object Seats extends Controller with AuthElement with AuthConfigImpl {
       })
   }
 
-  val seatCheckForm = Form(
-    mapping(
-      "event" -> longNumber,
-      "sector" -> text,
-      "row" -> number,
-      "num" -> number)((event, sector, row, num) => (event, sector, row, num))(tup => Some(tup)))
-
-  val seatCheckboxMapping = mapping(
-    "rows" -> list(rowMap))(rows => rows)(rows => Some(rows)).verifying("Выберете хотя бы одно место!", _ exists (_.nonEmpty))
-
-  def checkSeat = StackAction(AuthorityKey -> Permission.default) { implicit request =>
-    implicit val user = Some(loggedIn)
-    Ok(views.html.seats.seatcheck(seatCheckForm))
-  }
-
-  def checkSeatProc = StackAction(AuthorityKey -> Permission.default) { implicit request =>
-    implicit val user = Some(loggedIn)
-    seatCheckForm.bindFromRequest.fold(
-      formWithErrors => Ok(views.html.seats.seatcheck(formWithErrors)),
-      seatParams => {
-        val event = Event.getById(seatParams._1).get
-        val sector = Sector.findByNameFromEvent(event, seatParams._2).get
-        val seats = Sector.seats(sector)
-        val result =
-          seats.find(seat => seat.rowNumber == seatParams._3
-            && seat.num == seatParams._4) match {
-            case None => ("info" -> "Free Seat!")
-            case Some(seat) => ("error" -> "Место продано!")
-          }
-        Redirect(routes.Seats.checkSeat).flashing(result)
-      })
-  }
 }

@@ -2,27 +2,27 @@
 @(userForm: Form[User])
 
 		
-		@helper.input(userForm("name"), '_label -> "Логин", '_class ->"form-group") { (id, name, value, args) =>
+		@helper.input(userForm("name"), '_label -> "Логин", '_class ->"form-group",'_showConstraints->false) { (id, name, value, args) =>
 	    <input type="text" value="@value"  name="@name" id="@id" @toHtmlArgs(args) class="form-control" placeholder="Введите логин пользователя">
 		}
 		
-		@helper.input(userForm("fullName"), '_label -> "Полное имя", '_class ->"form-group") { (id, name, value, args) =>
+		@helper.input(userForm("fullName"), '_label -> "Полное имя", '_class ->"form-group",'_showConstraints->false) { (id, name, value, args) =>
 	    <input type="text" value="@value"  name="@name" id="@id" @toHtmlArgs(args) class="form-control" placeholder="Введите имя пользователя">
 		}		
 		
 		<div class="checkbox">
 			<lavel>
-				<input type = "checkbox" value = "true" id="edEv" name="edEv">Может редактировать события
+				<input type = "checkbox" value = "true" id="edEv" name="edEv"  @if(userForm.data("edEv")=="true"){checked}>Может редактировать события
 			</lavel>
 		</div>
 		<div class="checkbox">
 			<lavel>
-				<input type = "checkbox" value = "true" id="edS" name="edS">Может редактировать продажи
+				<input type = "checkbox" value = "true" id="edS" name="edS" @if(userForm.data("edS")=="true"){checked}>Может редактировать продажи
 			</lavel>
 		</div>
 		<div class="checkbox">
 			<lavel>
-				<input type = "checkbox" value = "true" id="edU" name="edU">Может редактировать пользователей
+				<input type = "checkbox" value = "true" id="edU" name="edU"  @if(userForm.data("edU")=="true"){checked}>Может редактировать пользователей
 			</lavel>
 		</div>
 			<button type="submit" class="bth btn-primary btn-lg">Сохранить</button>

@@ -4,7 +4,7 @@
 @main("Новый пользователь"){
 	<div class="container">
 		@helper.form(action= routes.Users.saveUser, 'role->"form", 'class->"form-horizontal"){
-		@helper.input(userForm("id"), '_label ->"ID", '_class ->"form-group") { (id, name, value, args) =>
+		@helper.input(userForm("id"), '_label ->"ID", '_class ->"form-group",'_showConstraints->false) { (id, name, value, args) =>
 	    <input type="text" value="0" name="id" id="id" class="form-control" readonly>
 		}			
 			@views.html.users.userForm(userForm)

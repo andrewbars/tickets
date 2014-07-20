@@ -71,9 +71,6 @@ object Sector {
   def orderedSeatsInSector(sector: Sector) = inTransaction {
     sector.seats.toList
   }
-  def findByNameFromEvent(event: Event, name: String) = inTransaction {
-    event.sectors.find(s => s.name.equalsIgnoreCase(name))
-  }
   def seats(sector: Sector) = inTransaction(sector.seats.toList)
 }
 

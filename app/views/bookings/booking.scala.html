@@ -6,15 +6,15 @@
 	<div class="container">
 		@helper.form(action= routes.Bookings.saveBooking(sector.id, eventID), 'role->"form", 'class->"form-horizontal"){
 			
-				@helper.input(bookingForm("clientName"), '_label -> "Бронь на имя: ", '_class ->"form-group") { (id, name, value, args) =>
+				@helper.input(bookingForm("clientName"), '_label -> "Бронь на имя: ", '_class ->"form-group",'_showConstraints->false) { (id, name, value, args) =>
 	    <input type="text" value="@value"  name="@name" id="@id" @toHtmlArgs(args) class="form-control" placeholder="Введите ФИО клиента">
 	}
 				<h4>Бронирование действительно до: </h4>
-				@helper.input(bookingForm("expDate.date"), '_label -> Messages("date"), '_class ->"form-group"){ (id, name, value, args) =>
-	    <input type="date" value="@value"  name="@name" id="@id" @toHtmlArgs(args) class="form-control">
+				@helper.input(bookingForm("expDate.date"), '_label -> Messages("date"), '_class ->"form-group" ,'_showConstraints->false){ (id, name, value, args) =>
+	    <input type="date" value="@value"  name="@name" id="@id" @toHtmlArgs(args) class="form-control form-narrow">
 	}
-				@helper.input(bookingForm("expDate.time"), '_label -> Messages("time"), '_class ->"form-group"){ (id, name, value, args) =>
-	    <input type="time" value="@value"  name="@name" id="@id" @toHtmlArgs(args) class="form-control">
+				@helper.input(bookingForm("expDate.time"), '_label -> Messages("time"), '_class ->"form-group",'_showConstraints->false){ (id, name, value, args) =>
+	    <input type="time" value="@value"  name="@name" id="@id" @toHtmlArgs(args) class="form-control form-narrow">
 	}
 </div>
 <h2>Выберете места: </h2>
