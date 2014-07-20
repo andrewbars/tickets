@@ -14,7 +14,21 @@
 						exists(s=>s.rowNumber==row&&s.num==seat&&s.sold)){danger}else{
 						@if(orderedSeats
 						exists(s=>s.rowNumber==row&&s.num==seat&&s.booked)){warning}else{info}
-						}">@seat</td>
+					}">
+						@if(orderedSeats.find(s=>s.rowNumber==row&&s.num==seat&&s.sold).isDefined){
+							<a href = "@routes.Sales.show(Seat.sale(
+								orderedSeats.find(s=>s.rowNumber==row&&s.num==seat&&s.sold).get).id)">
+								@seat
+							</a>
+						}else {
+							@if(orderedSeats.find(s=>s.rowNumber==row&&s.num==seat&&s.booked).isDefined){
+								<a href = "@routes.Bookings.show(Seat.booking(
+									orderedSeats.find(s=>s.rowNumber==row&&s.num==seat&&s.booked).get).id)">
+									@seat
+								</a> 
+							}else{@seat}
+						}													
+					</td>
 				}
 			</tr>	
 		}
