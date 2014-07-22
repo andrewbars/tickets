@@ -43,5 +43,26 @@
 				}
 			</div>
 		</div>
+	}else{
+		<div class="container">
+			<table class="table table-condensed">
+				<tr>
+					<th>Сектор</th>
+					<th>Продано мест</th>
+					<th>Осталось свободно</th>
+					<th>Процент заполнения</th>
+				</tr>
+				@for(sector<-Event.sectors(event)){
+					<tr>	
+						<td>@sector.name</td>
+						@defining(Sector.seats(sector).length){seats=>
+							<td>@seats</td>
+							<td>@(sector.numOfRows*sector.seatsInRow-seats)</td>
+							<td>@(seats/(sector.seatsInRow*sector.numOfRows)*100)</td>
+						}				
+					</tr>
+				}
+			</table>
+		</div>
 	}
 }

@@ -5,19 +5,22 @@
 }
 
 tr {
-width: 100%;
-display: inline-table;
-height:10px;    
+	width: 100%;
+	height:10px;    
+}
+
+td{
+	text-align: center;
 }
 
 img{
-margin:auto;
+	margin:auto;
 }
 table{
-padding:0;
-margin:0;
+	padding:0;
+	margin:0;
 }
 
 .form-narrow{
-width: 150px;'
+	width: 150px;'
 }

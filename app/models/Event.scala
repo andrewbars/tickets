@@ -47,9 +47,10 @@ object Event {
     Sale.deleteByEventID(id)
   }
   def getById(id: Long) = getAll.find(_.id == id)
+  def sectors(event:Event) = inTransaction(event.sectors.toList)
   def getSectors(id: Long): Option[List[Sector]] = getById(id) match {
     case None => None
-    case Some(event) => inTransaction(Some(event.sectors.toList))
+    case Some(event) => inTransaction(Some(sectors(event)))
   }
   def bookings(event: Event) = inTransaction(event.bookings.toList)
 }
