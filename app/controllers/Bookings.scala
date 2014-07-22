@@ -20,7 +20,7 @@ import General.searchForm
 object Bookings extends Controller with AuthElement with AuthConfigImpl {
 
   val bookingForm = Form(mapping(
-    "expDate" -> dateTimeMapping,
+    "expDate" -> dateTimeMapping.verifying("Срок истечения не может быть меньше текущего времени!", _.after(new Timestamp(Calendar.getInstance().getTimeInMillis()))),
     "clientName" -> nonEmptyText,
     "seats" -> seatCheckboxMapping)((expDate, clientName, seats) => (expDate, clientName, seats))(book => Some(book)))
 

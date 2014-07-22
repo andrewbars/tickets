@@ -4,6 +4,11 @@
 
 @main("Сектор "+sector.name){
 	@helper.form(action= routes.Sales.saveSale(sector.id, eventID), 'role->"form", 'class->"form-horizontal"){
+		<div class="container">
+			@rowForm.errors("seats").map{error=>
+				<div class="alert alert-danger">@error.message</div>
+			}
+		</div>			
 		@seats.seatCheckboxForm(sector, orderedSeats)
 		<button type="submit" class="bth btn-primary btn-lg">@Messages("save")</button>
 	}

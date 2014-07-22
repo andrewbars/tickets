@@ -5,19 +5,24 @@
 	
 	
 	@helper.input(eventForm("name"), '_label -> Messages("name"), '_class ->"form-group",'_showConstraints->false) { (id, name, value, args) =>
-    	<input type="text" value="@value"  name="@name" id="@id" @toHtmlArgs(args) class="form-control" placeholder="Введите название события">
+    	<input type="text" value="@value"  name="@name" id="@id" @toHtmlArgs(args) class="form-control" placeholder="Введите название события" required>
 	}
 	
+	@if(eventForm.error("date").isDefined){
+		<div class="alert alert-danger">@eventForm.error("date").get.message</div>
+	}
+	
+
 	@helper.input(eventForm("date.date"), '_label -> Messages("date"), '_class ->"form-group",'_showConstraints->false){ (id, name, value, args) =>
-		    <input type="date" value="@value"  name="@name" id="@id" @toHtmlArgs(args) class="form-control form-narrow">
+		    <input type="date" value="@value"  name="@name" id="@id" @toHtmlArgs(args) class="form-control form-narrow" required>
 	}
 			
 	@helper.input(eventForm("date.time"), '_label -> Messages("time"), '_class ->"form-group",'_showConstraints->false){ (id, name, value, args) =>
-		<input type="time" value="@value"  name="@name" id="@id" @toHtmlArgs(args) class="form-control form-narrow">
+		<input type="time" value="@value"  name="@name" id="@id" @toHtmlArgs(args) class="form-control form-narrow" required>
 	}
 			
 	@helper.input(eventForm("bookingExpTime"), '_label -> "Бронирования истекают за (минут):", '_class ->"form-group",'_showConstraints->false)	{ (id, name, value, args) =>
-		<input type="number" value="@value"  name="@name" id="@id" @toHtmlArgs(args) class="form-control form-narrow">
+		<input type="number" value="@value"  name="@name" id="@id" @toHtmlArgs(args) class="form-control form-narrow" required>
 	}	
 	@helper.input(eventForm("dscr"), '_label -> Messages("dscr"), '_class ->"form-group",'_showConstraints->false)	{ (id, name, value, args) =>
 	    <textarea id="@id" name="@name" class="form-control" placeholder="Введите описание" rows="5" >@value</textarea>

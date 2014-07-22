@@ -21,7 +21,7 @@ object Users extends Controller with AuthElement with AuthConfigImpl {
   val userForm = Form {
     mapping(
       "id" -> longNumber,
-      "name" -> nonEmptyText,
+      "name" -> nonEmptyText.verifying("Пользователь с таким логином уже существует!", !User.findByName(_).isDefined),
       "fullName" -> nonEmptyText,
       "edEv" -> boolean,
       "edS" -> boolean,

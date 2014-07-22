@@ -1,6 +1,12 @@
 @* login Template File *@
 @(loginForm: Form[Option[models.User]])(implicit flash:Flash)
 @main("Вход в систему"){
+	
+	<div class="container">
+		@loginForm.errors.map{error=>
+			<div class="alert alert-danger">@error.message</div>
+		}
+	</div>
   <div class="container">
   @helper.form(action= routes.Application.authenticate, 'role->"form", 'class->"form-signin"){
         <h3 class="form-signin-heading">Введите логин и пароль для доступа</h3>

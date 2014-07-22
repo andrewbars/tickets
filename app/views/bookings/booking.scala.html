@@ -6,17 +6,29 @@
 	<div class="container">
 		@helper.form(action= routes.Bookings.saveBooking(sector.id, eventID), 'role->"form", 'class->"form-horizontal"){
 			
-				@helper.input(bookingForm("clientName"), '_label -> "Бронь на имя: ", '_class ->"form-group",'_showConstraints->false) { (id, name, value, args) =>
-	    <input type="text" value="@value"  name="@name" id="@id" @toHtmlArgs(args) class="form-control" placeholder="Введите ФИО клиента">
+			@helper.input(bookingForm("clientName"), '_label -> "Бронь на имя: ", '_class ->"form-group",'_showConstraints->false) { (id, name, value, args) =>
+	    <input type="text" value="@value"  name="@name" id="@id" @toHtmlArgs(args) class="form-control" placeholder="Введите ФИО клиента" required>
 	}
-				<h4>Бронирование действительно до: </h4>
-				@helper.input(bookingForm("expDate.date"), '_label -> Messages("date"), '_class ->"form-group" ,'_showConstraints->false){ (id, name, value, args) =>
-	    <input type="date" value="@value"  name="@name" id="@id" @toHtmlArgs(args) class="form-control form-narrow">
+			<div class="container">
+			@bookingForm.errors("expDate").map{error=>
+				<div class="alert alert-danger">@error.message</div>
+			}
+			</div>	
+			
+			<h4>Бронирование действительно до: </h4>
+			@helper.input(bookingForm("expDate.date"), '_label -> Messages("date"), '_class ->"form-group" ,'_showConstraints->false){ (id, name, value, args) =>
+	    <input type="date" value="@value"  name="@name" id="@id" @toHtmlArgs(args) class="form-control form-narrow" required>
 	}
-				@helper.input(bookingForm("expDate.time"), '_label -> Messages("time"), '_class ->"form-group",'_showConstraints->false){ (id, name, value, args) =>
-	    <input type="time" value="@value"  name="@name" id="@id" @toHtmlArgs(args) class="form-control form-narrow">
+			@helper.input(bookingForm("expDate.time"), '_label -> Messages("time"), '_class ->"form-group",'_showConstraints->false){ (id, name, value, args) =>
+	    <input type="time" value="@value"  name="@name" id="@id" @toHtmlArgs(args) class="form-control form-narrow" required>
 	}
 </div>
+
+	<div class="container">
+		@bookingForm.errors("seats").map{error=>
+			<div class="alert alert-danger">@error.message</div>
+		}
+	</div>	
 <h2>Выберете места: </h2>
 		@seats.seatCheckboxForm(sector, orderedSeats)
 		<button type="submit" class="bth btn-primary btn-lg">@Messages("save")</button>
