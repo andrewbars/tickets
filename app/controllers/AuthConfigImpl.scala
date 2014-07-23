@@ -33,7 +33,7 @@ trait AuthConfigImpl extends AuthConfig {
 
 
   def authorizationFailed(request: RequestHeader)(implicit ctx: ExecutionContext): Future[SimpleResult] = 
-    Future.successful(Forbidden("no permission"))
+    Future.successful(Forbidden(views.html.accessDenied(request.flash)))
 
   def authorize(user: User, authority: Authority)(implicit ctx: ExecutionContext): Future[Boolean] = Future.successful {
 	  authority(user)

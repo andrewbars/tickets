@@ -1,0 +1,15 @@
+@* accessDenied Template File *@
+@(implicit flash:Flash)
+
+@main("Access Denied!"){
+	<div class="container">
+		<h1 class="text-danger">Доступ запрещен! </h1>
+		<div class="col-md-3">
+			<img src="@routes.Assets.at("images/stop.png")" class="img-responsive"/>
+		</div>
+		<div class="col-md-9">
+			<h3>У Вас недостаточно прав для доступа к запрашиваемой странице. Вы можете вернуться на главную страницу</h3>
+			<a class="btn btn-primary btn-lg active" role="button" href="@routes.Application.index">На главную</a>
+		</div>
+	</div>
+}
