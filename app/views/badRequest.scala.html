@@ -1,0 +1,16 @@
+@* badRequest Template File *@
+
+@(implicit flash:Flash)
+
+@main("400 Bad Request"){
+	<div class="container">
+		<h1 class="text-danger">Кажется, что-то пошло не так </h1>
+		<div class="col-md-3">
+			<img src="@routes.Assets.at("images/400.jpg")" class="img-responsive"/>
+		</div>
+		<div class="col-md-9">
+			<h3>К сожалению, при обработке вашего запроса возникла ошибка. Вы можете вернуться на главную страницу</h3>
+			<a class="btn btn-primary btn-lg active" role="button" href="@routes.Application.index">На главную</a>
+		</div>
+	</div>
+}

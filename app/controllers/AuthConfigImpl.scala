@@ -29,7 +29,7 @@ trait AuthConfigImpl extends AuthConfig {
 
 
   def authenticationFailed(request: RequestHeader)(implicit ctx: ExecutionContext): Future[SimpleResult] =
-    Future.successful(Redirect(routes.Application.login).flashing("error"->"У Вас не прав для данного действия!"))
+    Future.successful(Redirect(routes.Application.login).flashing("error"->"Для доступа к данной странице необходимо войти в систему!"))
 
 
   def authorizationFailed(request: RequestHeader)(implicit ctx: ExecutionContext): Future[SimpleResult] = 

@@ -1,0 +1,15 @@
+@* notFound Template File *@
+@(implicit flash:Flash)
+
+@main("404 NotFound"){
+	<div class="container">
+		<h1 class="text-danger">Страница не найдена! </h1>
+		<div class="col-md-3">
+			<img src="@routes.Assets.at("images/404.png")" class="img-responsive"/>
+		</div>
+		<div class="col-md-9">
+			<h3>К сожалению, запрашиваемая Вами страница не найдена. Вы можете вернуться на главную страницу</h3>
+			<a class="btn btn-primary btn-lg active" role="button" href="@routes.Application.index">На главную</a>
+		</div>
+	</div>
+}

@@ -2,7 +2,11 @@ import org.squeryl.adapters.MySQLAdapter
 import org.squeryl.{ Session, SessionFactory }
 import play.api.db.DB
 import play.api.libs.concurrent.Akka
+import scala.concurrent.Future
 import play.api.{ Application, GlobalSettings }
+import play.api._
+import play.api.mvc._
+import play.api.mvc.Results._
 import akka.actor.{ Actor, Props }
 import models.{ Booking, Event }
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
@@ -17,6 +21,14 @@ object Global extends GlobalSettings {
     val actor = Akka.system.actorOf(
       Props(new bookingExpireActor))
     Akka.system.scheduler.schedule(0.seconds, 1.minutes, actor, "check")
+  }
+  
+  override def onBadRequest(request:RequestHeader, error:String)={
+    Future.successful(BadRequest(views.html.badRequest(request.flash)))
+  }
+  
+  override def onHandlerNotFound(request:RequestHeader)={
+    Future.successful(NotFound(views.html.notFound(request.flash)))
   }
 }
 
