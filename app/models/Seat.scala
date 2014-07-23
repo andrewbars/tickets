@@ -36,7 +36,7 @@ case class Seat(
   def this() = this(0, 0, 0, 0, false, false, Some(0), Some(0))
   lazy val sector: ManyToOne[Sector] =
     Database.sectorsToSeats.right(Seat.this)
-  lazy val sell: ManyToOne[Sale] =
+  lazy val sale: ManyToOne[Sale] =
     salesToSeats.right(this)
   lazy val booking: ManyToOne[Booking] =
     bookingsToSeats.right(this)
@@ -88,6 +88,7 @@ object Seat {
   def sector(seat: Seat) = inTransaction {
     seat.sector.single
   }
-  def sale(seat: Seat) = inTransaction(Sector.event(Seat.sector(seat)))
+  def event(seat: Seat) = inTransaction(Sector.event(Seat.sector(seat)))
+  def sale(seat:Seat) = inTransaction(seat.sale.single)
   def booking(seat: Seat) = inTransaction(seat.booking.single)
 }

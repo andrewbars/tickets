@@ -50,4 +50,17 @@ object Seats extends Controller with AuthElement with AuthConfigImpl {
       })
   }
 
+  def seatRelatedOrder(eventID: Long, sectorID: Long, row: Int, seatNum: Int) = StackAction(AuthorityKey -> Permission.default) { implicit request =>
+    implicit val user = Some(loggedIn)
+    val seatOpt = Sector.seats(Sector.getByID(sectorID).get) find (s => s.num == seatNum && s.rowNumber == row)
+    seatOpt match {
+      case None => Redirect(routes.Events.showWithSector(eventID, sectorID)).flashing("info" -> "Данное место свободно")
+      case Some(seat) =>
+        if (seat.sold)
+          Redirect(routes.Sales.show(seat.saleID.get))
+        else
+          Redirect(routes.Bookings.show(seat.bookingID.get))
+    }
+
+  }
 }

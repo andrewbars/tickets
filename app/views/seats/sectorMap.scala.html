@@ -9,13 +9,24 @@
 			<tr>
 				<td class="success">@(row)</td>
 				@for(seat<-1 to sector.seatsInRow) {
+					
+					
 					<td 
 					class= "@if(orderedSeats
 						exists(s=>s.rowNumber==row&&s.num==seat&&s.sold)){danger}else{
 						@if(orderedSeats
 						exists(s=>s.rowNumber==row&&s.num==seat&&s.booked)){warning}else{info}
-						}">@seat</td>
-				}
+						}">
+						
+							@if(orderedSeats exists(s=>s.rowNumber==row&&s.num==seat)){
+								<a href="@routes.Seats.seatRelatedOrder(sector.eventID, sector.id, row, seat)">
+							}
+							@seat
+							@if(orderedSeats exists(s=>s.rowNumber==row&&s.num==seat)){
+								</a>
+							}	
+						</td>					
+					}
 			</tr>	
 		}
 		</table>
