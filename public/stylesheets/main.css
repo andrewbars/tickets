@@ -24,3 +24,9 @@ table{
 .form-narrow{
 	width: 150px;'
 }
+
+.nav-tabs> li> a,
+.nav-tabs> li> a:hover,
+.nav-tabs> li> a:focus{
+	background-color: #425bca;
+}
