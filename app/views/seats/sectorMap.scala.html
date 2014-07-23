@@ -9,22 +9,23 @@
 			<tr>
 				<td class="success">@(row)</td>
 				@for(seat<-1 to sector.seatsInRow) {
-					@orderedSeats.find(s=>s.rowNumber==row&&s.num==seat) match{
-						case None=>{
-							<td class="info">@seat</td>	
-						}
-						case Some(seat)=>{
-							<td class="@if(seat.sold){danger}else{warning}">
-								<a href="@if(seat.sold){
-								@routes.Sales.show(Seat.sale(seat).id)
-								}else{
-									@routes.Bookings.show(Seat.booking(seat).id)
-								}">
-									@seat.num
-								</a>
-							</td>	
+					
+					
+					<td 
+					class= "@if(orderedSeats
+						exists(s=>s.rowNumber==row&&s.num==seat&&s.sold)){danger}else{
+						@if(orderedSeats
+						exists(s=>s.rowNumber==row&&s.num==seat&&s.booked)){warning}else{info}
+						}">
+						
+							@if(orderedSeats exists(s=>s.rowNumber==row&&s.num==seat)){
+								<a href="@routes.Seats.seatRelatedOrder(sector.eventID, sector.id, row, seat)">
 							}
-						}		
+							@seat
+							@if(orderedSeats exists(s=>s.rowNumber==row&&s.num==seat)){
+								</a>
+							}	
+						</td>					
 					}
 			</tr>	
 		}

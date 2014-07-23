@@ -19,11 +19,12 @@ GET		/events/archive				controllers.Events.archiveList
 GET		/events/add					controllers.Events.addNew
 POST	/events/add					controllers.Events.insert
 
-GET		/events/:id							controllers.Events.show(id:Long)
-GET		/events/:eventID/sector/:sectorID 	controllers.Events.showWithSector(eventID: Long, sectorID: Long)
-GET 	/events/:id/remove					controllers.Events.remove(id:Long)
-GET 	/events/:id/edit					controllers.Events.edit(id: Long)
-POST	/events/edit						controllers.Events.update
+GET		/events/:id								controllers.Events.show(id:Long)
+GET		/events/:eventID/sector/:sectorID 		controllers.Events.showWithSector(eventID: Long, sectorID: Long)
+GET		/events/:eventID/sector/:sectorID/seat	controllers.Seats.seatRelatedOrder(eventID: Long, sectorID: Long, row: Int, seatNum: Int)
+GET 	/events/:id/remove						controllers.Events.remove(id:Long)
+GET 	/events/:id/edit						controllers.Events.edit(id: Long)
+POST	/events/edit							controllers.Events.update
 #Редактирование цен билетов для события
 GET		/events/:id/edit/prices		controllers.Seats.setPrices(id: Long)
 POST	/events/:id/edit/prices		controllers.Seats.savePrices(id: Long)
