@@ -21,7 +21,7 @@ object Users extends Controller with AuthElement with AuthConfigImpl {
   val userForm = Form {
     mapping(
       "id" -> longNumber,
-      "name" -> nonEmptyText.verifying("Пользователь с таким логином уже существует!", !User.findByName(_).isDefined),
+      "name" -> nonEmptyText,
       "fullName" -> nonEmptyText,
       "edEv" -> boolean,
       "edS" -> boolean,
@@ -45,9 +45,14 @@ object Users extends Controller with AuthElement with AuthConfigImpl {
     implicit val user = Some(loggedIn)
     userForm.bindFromRequest.fold(
       formWithErrors => Ok(views.html.users.addNew(formWithErrors)),
-      user => {
-        User.addNew(user)
-        Redirect(routes.Events.list).flashing("success" -> ("Новый пользователь " + user.name + " успешно создан!"))
+      newUser => {
+        if(!User.findByName(newUser.name).isDefined){
+	        User.addNew(newUser)
+	        Redirect(routes.Events.list).flashing("success" -> ("Новый пользователь " + newUser.name + " успешно создан!"))          
+        }else{
+          Ok(views.html.users.addNew(userForm.fill(newUser).withError("name", "Пользователь с таким именем уже существует", Nil)))
+        }
+
       })
   }
 
@@ -81,7 +86,11 @@ object Users extends Controller with AuthElement with AuthConfigImpl {
   }
   def editUser(userID: Long) = StackAction(AuthorityKey -> Permission.editUsers) { implicit request =>
     implicit val loggedUser = Some(loggedIn)
-    Ok(views.html.users.edit(userForm.fill(User.findByID(userID).get)))
+    try{
+      Ok(views.html.users.edit(userForm.fill(User.findByID(userID).get)))
+    }catch{
+      case e: NoSuchElementException => BadRequest(views.html.badRequest(request.flash))
+    }
   }
   def updateUser = StackAction(AuthorityKey -> Permission.editUsers) { implicit request =>
     implicit val user = Some(loggedIn)

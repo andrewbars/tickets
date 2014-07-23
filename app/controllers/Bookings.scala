@@ -31,8 +31,8 @@ object Bookings extends Controller with AuthElement with AuthConfigImpl {
       case None => Redirect(routes.Events.show(eventID)).flashing("error" -> "Задан неверный номер сектора")
       case Some(sec) =>
         val event = Sector.event(sec)
-        val expTime = new Timestamp(event.date.getTime()-event.bookingExpTime*60*1000)
-        Ok(views.html.bookings.booking(sec, eventID, Sector.orderedSeatsInSector(sec))(bookingForm.fill((expTime,"", Nil))))
+        val expTime = new Timestamp(event.date.getTime() - event.bookingExpTime * 60 * 1000)
+        Ok(views.html.bookings.booking(sec, eventID, Sector.orderedSeatsInSector(sec))(bookingForm.fill((expTime, "", Nil))))
     }
   }
 
@@ -51,29 +51,40 @@ object Bookings extends Controller with AuthElement with AuthConfigImpl {
       })
   }
   def confirmBooking(bookingID: Long) = StackAction(AuthorityKey -> Permission.default) { implicit request =>
-    val booking = Booking.getById(bookingID).get
-    Booking.confirmBooking(booking)
-    Redirect(routes.Events.show(booking.eventID)).flashing("success" -> "Бронирование подтверждено!")
+    Booking.getById(bookingID) match {
+      case None => Redirect(routes.Events.list).flashing("error" -> "Бронирование с таким ID не найдено")
+      case Some(booking) =>
+        Booking.confirmBooking(booking)
+        Redirect(routes.Events.show(booking.eventID)).flashing("success" -> "Бронирование подтверждено!")
+    }
+
   }
   def revertBooking(bookingID: Long) = StackAction(AuthorityKey -> Permission.default) { implicit request =>
     implicit val user = Some(loggedIn)
-    val booking = Booking.getById(bookingID).get
-    Booking.revertBooking(booking)
-    Redirect(routes.Events.show(booking.eventID)).flashing("info" -> "Бронирование отменено!")
+    Booking.getById(bookingID) match {
+      case None => Redirect(routes.Events.list).flashing("error" -> "Бронирование с таким ID не найдено")
+      case Some(booking) =>
+        Booking.revertBooking(booking)
+        Redirect(routes.Events.show(booking.eventID)).flashing("info" -> "Бронирование отменено!")
+    }
   }
 
   def redeemBooking(bookingID: Long) = StackAction(AuthorityKey -> Permission.default) { implicit request =>
-    val booking = Booking.getById(bookingID).get
-    val sale = Sale(0,
-      Booking.event(booking).id,
-      new Timestamp(Calendar.getInstance().getTimeInMillis()),
-      booking.price,
-      true,
-      loggedIn.id,
-      true,
-      Some(booking.userID))
-    Booking.redeemBooking(booking, sale)
-    Redirect(routes.Sales.show(sale.id)).flashing("success" -> "Выкуп продажи успешно подтвержден!")
+    try{
+      val booking = Booking.getById(bookingID).get
+	    val sale = Sale(0,
+	      Booking.event(booking).id,
+	      new Timestamp(Calendar.getInstance().getTimeInMillis()),
+	      booking.price,
+	      true,
+	      loggedIn.id,
+	      true,
+	      Some(booking.userID))
+	    Booking.redeemBooking(booking, sale)
+	    Redirect(routes.Sales.show(sale.id)).flashing("success" -> "Выкуп продажи успешно подтвержден!")
+    }catch{
+      case e:NoSuchElementException=>BadRequest(views.html.badRequest(request.flash))
+    }
   }
 
   def show(bookingID: Long) = StackAction(AuthorityKey -> Permission.default) { implicit request =>
@@ -114,13 +125,17 @@ object Bookings extends Controller with AuthElement with AuthConfigImpl {
       })
   }
   def excludeOne(seatID: Long, bookingID: Long) = StackAction(AuthorityKey -> Permission.default) { implicit request =>
-    Seat.deleteOne(seatID)
-    val booking = Booking.getById(bookingID).get
-    if (Booking.seats(booking).isEmpty) {
-      Booking.revertBooking(booking)
-      Redirect(routes.Events.list).flashing("success" -> "Бронирование отменено")
-    } else {
-      Redirect(routes.Bookings.show(bookingID)).flashing("success" -> "Выбранное место исключено")
+    try{
+	    Seat.deleteOne(seatID)
+	    val booking = Booking.getById(bookingID).get
+	    if (Booking.seats(booking).isEmpty) {
+	      Booking.revertBooking(booking)
+	      Redirect(routes.Events.list).flashing("success" -> "Бронирование отменено")
+	    } else {
+	      Redirect(routes.Bookings.show(bookingID)).flashing("success" -> "Выбранное место исключено")
+	    }
+    }catch{
+      case e:NoSuchElementException=>BadRequest(views.html.badRequest(request.flash))
     }
   }
 }

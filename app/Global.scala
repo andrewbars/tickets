@@ -24,6 +24,7 @@ object Global extends GlobalSettings {
   }
   
   override def onBadRequest(request:RequestHeader, error:String)={
+    play.api.Logger.warn(error)
     Future.successful(BadRequest(views.html.badRequest(request.flash)))
   }
   

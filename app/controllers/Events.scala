@@ -94,7 +94,7 @@ object Events extends Controller with AuthElement with AuthConfigImpl {
       implicit val user = Some(loggedIn)
       val event = Event.getById(id)
       event match {
-        case None => NotFound
+        case None => Redirect(routes.Events.list()).flashing("error" -> (Messages("events.notfound")))
         case Some(x) => Ok(views.html.events.edit(eventForm.fill(x)))
       }
   }
